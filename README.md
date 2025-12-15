@@ -64,6 +64,7 @@ To wire the UI to the backend:
 
 ## Admin endpoints
 
+
 User-facing endpoints:
 
 - `POST /api/auth/login`
