@@ -64,12 +64,6 @@ To wire the UI to the backend:
 
 ## Admin endpoints
 
-- `POST /api/admin/login` — authenticate with the admin password.
-- `GET /api/admin/users` — list users.
-- `POST /api/auth/admin/create-user` — create a new login for the generator.
-- `PATCH /api/admin/users/:id/toggle-paid` — flip the paid status that unlocks generator features.
-- `DELETE /api/admin/users/:id` — remove a user.
-
 User-facing endpoints:
 
 - `POST /api/auth/login`
