@@ -20,8 +20,7 @@
   </head>
   <body>
     <div id="root"></div>
-    
- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
     /* Force buttons to look active */
@@ -34,62 +33,138 @@
 </style>
 
 <script>
-  console.log("🚀 SYSTEM LOADED: Clean Email + PDF");
+  console.log("🚀 SYSTEM LOADED: Replica Design Active");
 
-  // --- 1. CLEAN EMAIL TEMPLATE GENERATOR ---
+  // --- 1. EMAIL TEMPLATE (Exact Data & Layout) ---
   function getCleanEmailHTML() {
-      // This is a "Safe" HTML template that works in Gmail/Outlook
       return `
-      <div style="font-family: Helvetica, Arial, sans-serif; background-color: #f4f4f4; padding: 40px 0;">
-        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border: 1px solid #dddddd; border-radius: 8px;">
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f4; padding: 40px 0; color: #000; font-size: 12px;">
+        <div style="max-width: 700px; margin: 0 auto; background-color: #ffffff; padding: 40px; border: 1px solid #e0e0e0;">
             
-            <div style="text-align: center; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
-                <h1 style="color: #333; margin: 0; font-size: 24px;">REÇU DE COMMANDE</h1>
-                <p style="color: #888; margin: 5px 0;">Facturify Inc.</p>
-            </div>
-
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <table style="width: 100%; margin-bottom: 30px; border-collapse: collapse;">
                 <tr>
-                    <td style="padding: 10px 0; color: #555;">Date:</td>
-                    <td style="padding: 10px 0; text-align: right; font-weight: bold;">10/12/2025</td>
-                </tr>
-                <tr>
-                    <td style="padding: 10px 0; color: #555;">N° Commande:</td>
-                    <td style="padding: 10px 0; text-align: right; font-weight: bold;">12345678901</td>
+                    <td style="vertical-align: top; width: 50%;">
+                        <h1 style="font-size: 18px; margin: 0; font-weight: bold; text-transform: uppercase;">FACTURE : N°12345678</h1>
+                    </td>
+                    <td style="vertical-align: top; width: 50%; text-align: right;">
+                        <p style="margin: 0;"><strong>Commande :</strong> 12345678901</p>
+                        <p style="margin: 2px 0;"><strong>Date de facture :</strong> 10/12/2025</p>
+                        <p style="margin: 2px 0;"><strong>Date de commande :</strong> 10/12/2025</p>
+                        <p style="margin: 2px 0;"><strong>Devise :</strong> EUR</p>
+                    </td>
                 </tr>
             </table>
 
-            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 4px;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 10px 0; font-weight: bold;">Article</td>
-                        <td style="padding: 10px 0; text-align: right; font-weight: bold;">Prix</td>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #000;">
+                        <th style="text-align: left; padding: 8px 0;">Référence</th>
+                        <th style="text-align: left; padding: 8px 0;">Article</th>
+                        <th style="text-align: center; padding: 8px 0;">Qté</th>
+                        <th style="text-align: right; padding: 8px 0;">Prix Unit. HT</th>
+                        <th style="text-align: right; padding: 8px 0;">Total HT</th>
+                        <th style="text-align: right; padding: 8px 0;">TVA</th>
+                        <th style="text-align: right; padding: 8px 0;">Total TTC</th>
                     </tr>
-                    <tr>
-                        <td style="padding: 10px 0;">SAC À MAIN CUIR (x1)</td>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px 0;">ABC123</td>
+                        <td style="padding: 10px 0;">SAC À MAIN CUIR</td>
+                        <td style="padding: 10px 0; text-align: center;">1</td>
                         <td style="padding: 10px 0; text-align: right;">249,17 €</td>
+                        <td style="padding: 10px 0; text-align: right;">249,17 €</td>
+                        <td style="padding: 10px 0; text-align: right;">49,83 € (20%)</td>
+                        <td style="padding: 10px 0; text-align: right;">299,00 €</td>
                     </tr>
-                    <tr>
-                        <td style="padding: 10px 0;">TVA (20%)</td>
-                        <td style="padding: 10px 0; text-align: right;">49,83 €</td>
+                    <tr style="border-bottom: 1px solid #000;">
+                        <td style="padding: 10px 0;">-</td>
+                        <td style="padding: 10px 0;">Frais de port</td>
+                        <td style="padding: 10px 0; text-align: center;">1</td>
+                        <td style="padding: 10px 0; text-align: right;">0 €</td>
+                        <td style="padding: 10px 0; text-align: right;">0 €</td>
+                        <td style="padding: 10px 0; text-align: right;">0 € (20%)</td>
+                        <td style="padding: 10px 0; text-align: right;">0 €</td>
                     </tr>
-                    <tr style="border-top: 2px solid #333;">
-                        <td style="padding: 15px 0; font-size: 18px; font-weight: bold;">TOTAL TTC</td>
-                        <td style="padding: 15px 0; text-align: right; font-size: 18px; font-weight: bold; color: #22c55e;">299,00 €</td>
-                    </tr>
-                </table>
-            </div>
+                </tbody>
+            </table>
 
-            <div style="margin-top: 30px; text-align: center; color: #999; font-size: 12px;">
-                <p>Merci pour votre achat !</p>
-                <p>Généré par Facturify</p>
+            <table style="width: 100%; margin-bottom: 30px; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 60%; vertical-align: top;">
+                         <p style="margin: 0 0 10px 0;"><strong>MODE DE PAIEMENT</strong><br>Carte bancaire : 299,00 €</p>
+                         <p style="margin: 0;"><strong>Total de points fidélité cumulé :</strong> 640</p>
+                    </td>
+                    <td style="width: 40%; vertical-align: top;">
+                        <table style="width: 100%; font-size: 12px;">
+                            <tr>
+                                <td style="padding: 4px 0;">Total HT</td>
+                                <td style="text-align: right;">249,17 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0;">Frais de port HT</td>
+                                <td style="text-align: right;">0,00 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0;">Total TVA</td>
+                                <td style="text-align: right;">49,83 €</td>
+                            </tr>
+                            <tr style="font-weight: bold; font-size: 14px; border-top: 1px solid #000;">
+                                <td style="padding: 10px 0;">Total Facturé TTC</td>
+                                <td style="text-align: right;">299,00 €</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <table style="width: 100%; margin-bottom: 40px; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 48%; background: #f9f9f9; padding: 15px; vertical-align: top;">
+                        <h3 style="margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase;">Adresse de Facturation</h3>
+                        <p style="margin: 0; line-height: 1.5;">
+                            Madame MARIE DUPONT<br>
+                            25 Rue du Commerce<br>
+                            75015 PARIS<br>
+                            France Métropolitaine
+                        </p>
+                    </td>
+                    <td style="width: 4%;"></td>
+                    <td style="width: 48%; background: #f9f9f9; padding: 15px; vertical-align: top;">
+                        <h3 style="margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase;">Adresse de Livraison</h3>
+                        <p style="margin: 0; line-height: 1.5;">
+                            Madame MARIE DUPONT<br>
+                            25 Rue du Commerce<br>
+                            75015 PARIS<br>
+                            France Métropolitaine
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="font-size: 10px; color: #666; text-align: justify; border-top: 1px solid #eee; padding-top: 20px; line-height: 1.4;">
+                <p style="margin-bottom: 10px;">
+                    TVA payée sur les débits. En cas de retard de paiement, les pénalités de retard sont égales à 3 fois le taux d’intérêt légal. 
+                    Le client professionnel devra également s’acquitter d’une indemnité forfaitaire de 40 euros pour frais de recouvrement.
+                </p>
+                <p style="margin-bottom: 10px;">
+                    Merci d’avoir choisi <strong>Galerieslafayette.com</strong>.<br>
+                    Pour toute question concernant cette facture, pour connaître une procédure de retour ou pour bénéficier de votre droit de rétractation, 
+                    veuillez contacter notre service clientèle via le formulaire de contact sur www.galerieslafayette.com/contact.
+                </p>
+                <p style="text-align: center; margin-top: 20px; font-weight: bold; color: #000;">
+                    GALERIES LAFAYETTE MANAGEMENT – SAS au Capital de 147.184.338 euros – siège social : 27 rue de Châteaudun, 75446 Paris Cedex 09 
+                    552 116 329 RCS PARIS – TVA intracommunautaire : FR85552116329
+                </p>
             </div>
+            
+            <div style="text-align: center; margin-top: 20px; font-size: 9px; color: #ccc;">FACTURIFY GENERATOR</div>
         </div>
       </div>
       `;
   }
 
-  // --- 2. GLOBAL CLICK INTERCEPTOR ---
+  // --- 2. GLOBAL CLICK LISTENER ---
   document.addEventListener('click', async function(e) {
       
       const target = e.target.closest('button');
@@ -121,7 +196,7 @@
 
           const opt = {
               margin: 0,
-              filename: 'facture.pdf',
+              filename: 'facture_galeries.pdf',
               image: { type: 'jpeg', quality: 0.98 },
               html2canvas: { scale: 2, useCORS: true },
               jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
@@ -155,7 +230,7 @@
               return;
           }
 
-          // Use our CLEAN HTML template
+          // Use our REPLICA HTML template
           const cleanHTML = getCleanEmailHTML();
 
           const oldText = target.innerText;
@@ -167,7 +242,7 @@
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                       to: emailInput.value,
-                      subject: "Votre Facture (Facturify)",
+                      subject: "Votre Facture Galeries Lafayette",
                       html: cleanHTML
                   })
               });
@@ -189,5 +264,6 @@
 
   }, true);
 </script>
+
   </body>
 </html>
