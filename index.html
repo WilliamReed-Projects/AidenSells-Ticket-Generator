@@ -21,8 +21,8 @@
   <body>
     <div id="root"></div>
 
-   <style>
-        /* Force buttons to be active */
+  <style>
+        /* Force buttons to be active so we can click them */
         button:disabled, button[disabled] {
             opacity: 1 !important;
             cursor: pointer !important;
@@ -32,7 +32,7 @@
     </style>
 
     <script>
-      console.log("🚀 SYSTEM LOADED: Final Backend Logic");
+      console.log("🚀 SYSTEM LOADED: Backend PDF & Smart Email");
 
       // --- 1. SCRAPE DATA ---
       function getInvoiceData() {
@@ -42,6 +42,7 @@
               return el ? el.value : "";
           };
 
+          // Get values from React inputs
           return {
               invoiceNum:   val("input-lafayette-invoice-num") || "12345678",
               orderNum:     val("input-lafayette-order-num") || "12345678901",
@@ -86,7 +87,7 @@
               data.sendEmail = true;
           }
 
-          // 👇 BACKEND URL
+          // 👇 BACKEND URL (Verify this matches your Railway URL)
           const API_URL = "https://backend-aidengen-backend.up.railway.app/api/invoices/generate";
 
           try {
@@ -100,10 +101,10 @@
               const contentType = response.headers.get("content-type");
 
               if (contentType && contentType.indexOf("application/json") !== -1) {
-                  // ✅ JSON RESPONSE -> EMAIL SENT (Show Alert)
+                  // ✅ JSON RESPONSE -> EMAIL SENT (Show Alert, Do NOT Download)
                   const json = await response.json();
                   if (response.ok) {
-                      alert("✅ " + (json.message || "Email envoyé !"));
+                      alert("✅ " + (json.message || "Email envoyé avec succès !"));
                       target.innerText = "Envoyé !";
                       target.style.backgroundColor = "#22c55e";
                   } else {
