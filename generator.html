@@ -21,10 +21,10 @@
   <body>
     <div id="root"></div>
     
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-    /* 1. FORCE BUTTONS TO LOOK ACTIVE */
+    /* Force buttons to look active */
     button:disabled, button[disabled] {
         opacity: 1 !important;
         cursor: pointer !important;
@@ -34,74 +34,116 @@
 </style>
 
 <script>
-  console.log("⚡ GOD MODE SCRIPT LOADED");
+  console.log("🚀 SYSTEM LOADED: Clean Email + PDF");
 
-  // --- HELPER: Get Iframe Safely ---
-  function getInvoiceIframe() {
-      const iframes = document.querySelectorAll('iframe');
-      for (let iframe of iframes) {
-          try {
-              const doc = iframe.contentDocument || iframe.contentWindow.document;
-              // Check if it has the invoice container
-              if (doc.getElementById('page-container') || doc.body.innerText.includes("FACTURE")) {
-                  return iframe;
-              }
-          } catch (e) { }
-      }
-      return null;
+  // --- 1. CLEAN EMAIL TEMPLATE GENERATOR ---
+  function getCleanEmailHTML() {
+      // This is a "Safe" HTML template that works in Gmail/Outlook
+      return `
+      <div style="font-family: Helvetica, Arial, sans-serif; background-color: #f4f4f4; padding: 40px 0;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border: 1px solid #dddddd; border-radius: 8px;">
+            
+            <div style="text-align: center; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
+                <h1 style="color: #333; margin: 0; font-size: 24px;">REÇU DE COMMANDE</h1>
+                <p style="color: #888; margin: 5px 0;">Facturify Inc.</p>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <tr>
+                    <td style="padding: 10px 0; color: #555;">Date:</td>
+                    <td style="padding: 10px 0; text-align: right; font-weight: bold;">10/12/2025</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0; color: #555;">N° Commande:</td>
+                    <td style="padding: 10px 0; text-align: right; font-weight: bold;">12345678901</td>
+                </tr>
+            </table>
+
+            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 4px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px 0; font-weight: bold;">Article</td>
+                        <td style="padding: 10px 0; text-align: right; font-weight: bold;">Prix</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 0;">SAC À MAIN CUIR (x1)</td>
+                        <td style="padding: 10px 0; text-align: right;">249,17 €</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 0;">TVA (20%)</td>
+                        <td style="padding: 10px 0; text-align: right;">49,83 €</td>
+                    </tr>
+                    <tr style="border-top: 2px solid #333;">
+                        <td style="padding: 15px 0; font-size: 18px; font-weight: bold;">TOTAL TTC</td>
+                        <td style="padding: 15px 0; text-align: right; font-size: 18px; font-weight: bold; color: #22c55e;">299,00 €</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center; color: #999; font-size: 12px;">
+                <p>Merci pour votre achat !</p>
+                <p>Généré par Facturify</p>
+            </div>
+        </div>
+      </div>
+      `;
   }
 
-  // --- GLOBAL CLICK INTERCEPTOR (Bypasses React) ---
+  // --- 2. GLOBAL CLICK INTERCEPTOR ---
   document.addEventListener('click', async function(e) {
       
-      // 1. IDENTIFY THE BUTTON
       const target = e.target.closest('button');
       if (!target) return;
-
       const btnText = target.innerText.toUpperCase();
 
-      // --- CASE A: PDF DOWNLOAD ---
+      // === A. PDF DOWNLOAD LOGIC ===
       if (btnText.includes("IMPRIMER") || btnText.includes("PDF")) {
           e.preventDefault();
           e.stopPropagation();
-          console.log("🖨️ PDF Click Intercepted!");
 
-          const iframe = getInvoiceIframe();
-          if (!iframe) {
-              alert("⚠️ Veuillez cliquer sur [VISUALISER] et attendre que la facture apparaisse.");
+          // Search for the iframe content
+          let element = null;
+          const iframes = document.querySelectorAll('iframe');
+          for (let iframe of iframes) {
+              try {
+                  const doc = iframe.contentDocument || iframe.contentWindow.document;
+                  if (doc.getElementById('page-container')) {
+                      element = doc.getElementById('page-container');
+                      break;
+                  }
+              } catch (e) {}
+          }
+
+          if (!element) {
+              alert("⚠️ Veuillez cliquer sur [VISUALISER] d'abord.");
               return;
           }
 
-          const element = iframe.contentDocument.getElementById('page-container') || iframe.contentDocument.body;
-          
           const opt = {
-              margin:       0.2,
-              filename:     'facture.pdf',
-              image:        { type: 'jpeg', quality: 0.98 },
-              html2canvas:  { scale: 2, useCORS: true },
-              jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+              margin: 0,
+              filename: 'facture.pdf',
+              image: { type: 'jpeg', quality: 0.98 },
+              html2canvas: { scale: 2, useCORS: true },
+              jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
           };
 
           const oldText = target.innerText;
-          target.innerText = "⏳ Génération...";
+          target.innerText = "Téléchargement...";
           
           try {
               await html2pdf().set(opt).from(element).save();
               target.innerText = oldText;
           } catch (err) {
               console.error(err);
-              alert("Erreur PDF: " + err.message);
               target.innerText = oldText;
           }
       }
 
-      // --- CASE B: EMAIL SEND ---
+      // === B. EMAIL SEND LOGIC ===
       if (btnText.includes("ENVOYER") || target.getAttribute('data-testid') === "button-send-email") {
           e.preventDefault();
           e.stopPropagation();
-          console.log("📧 Email Click Intercepted!");
 
-          // Get Email Input
           const inputs = document.querySelectorAll('input');
           let emailInput = null;
           for (let i of inputs) {
@@ -109,31 +151,15 @@
           }
 
           if (!emailInput) {
-              alert("⚠️ Veuillez entrer un email.");
+              alert("⚠️ Entrez un email.");
               return;
           }
 
-          const iframe = getInvoiceIframe();
-          if (!iframe) {
-              alert("⚠️ Veuillez cliquer sur [VISUALISER] d'abord.");
-              return;
-          }
-
-          // 📸 SNAPSHOT: Grab EVERYTHING from the iframe (Styles + Body)
-          const iframeDoc = iframe.contentDocument;
-          const fullHTML = `
-            <html>
-                <head>${iframeDoc.head.innerHTML}</head>
-                <body style="background: #fff; margin: 0; padding: 20px;">
-                    <div style="transform: scale(0.8); transform-origin: top left;">
-                        ${iframeDoc.body.innerHTML}
-                    </div>
-                </body>
-            </html>
-          `;
+          // Use our CLEAN HTML template
+          const cleanHTML = getCleanEmailHTML();
 
           const oldText = target.innerText;
-          target.innerText = "⏳ Envoi...";
+          target.innerText = "Envoi...";
 
           try {
               const response = await fetch("https://backend-aidengen-backend.up.railway.app/api/invoices/email", {
@@ -141,28 +167,27 @@
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                       to: emailInput.value,
-                      subject: "Votre Facture (PDF)",
-                      html: fullHTML
+                      subject: "Votre Facture (Facturify)",
+                      html: cleanHTML
                   })
               });
 
               if (response.ok) {
-                  alert("✅ Email envoyé avec succès !");
+                  alert("✅ Email envoyé !");
                   target.innerText = "Envoyé !";
-                  target.style.background = "green";
+                  target.style.background = "#22c55e";
               } else {
-                  const res = await response.json();
-                  alert("❌ Erreur: " + res.message);
+                  alert("❌ Erreur serveur");
                   target.innerText = oldText;
               }
           } catch (err) {
               console.error(err);
-              alert("❌ Erreur Réseau");
+              alert("❌ Erreur connexion");
               target.innerText = oldText;
           }
       }
 
-  }, true); // 'true' here means we capture the event BEFORE React does
+  }, true);
 </script>
   </body>
 </html>
