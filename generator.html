@@ -23,7 +23,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-    /* Force buttons to be clickable */
+    /* Force buttons to look active */
     button:disabled, button[disabled] {
         opacity: 1 !important;
         cursor: pointer !important;
@@ -33,9 +33,9 @@
 </style>
 
 <script>
-  console.log("🚀 SYSTEM LOADED: V5 (Template Engine)");
+  console.log("🚀 SYSTEM LOADED: Template Engine V5 (Final Fix)");
 
-  // --- 1. THE TEMPLATE (Shared by PDF & Email) ---
+  // --- 1. THE MASTER TEMPLATE (Used for both PDF & Email) ---
   function getInvoiceTemplate() {
       return `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #ffffff; padding: 40px; color: #000; font-size: 12px; width: 100%; max-width: 800px; margin: 0 auto;">
@@ -136,13 +136,12 @@
       if (!target) return;
       const btnText = target.innerText.toUpperCase();
 
-      // === A. PDF DOWNLOAD LOGIC ===
+      // === A. PDF DOWNLOAD LOGIC (USING TEMPLATE NOW) ===
       if (btnText.includes("IMPRIMER") || btnText.includes("PDF")) {
           e.preventDefault();
           e.stopPropagation();
 
-          // Check if "Visualiser" was clicked (by checking if iframe exists)
-          // Even though we don't use the iframe content, we check it to ensure the flow is correct
+          // Check if "Visualiser" was clicked (just for UX flow)
           const iframes = document.querySelectorAll('iframe');
           let ready = false;
           for(let f of iframes) { try { if(f.contentDocument.getElementById('page-container')) ready = true; } catch(e){} }
@@ -152,9 +151,10 @@
               return;
           }
 
-          // 🧠 GENIUS MOVE: Create PDF from our PERFECT TEMPLATE, not the buggy iframe
+          // 💡 KEY FIX: Create PDF from our PERFECT TEMPLATE
           const element = document.createElement('div');
-          element.innerHTML = getInvoiceTemplate(); // Use the clean template
+          element.innerHTML = getInvoiceTemplate(); 
+          element.style.width = '800px'; // Force width for PDF
 
           const opt = {
               margin: 0.2,
@@ -168,7 +168,6 @@
           target.innerText = "Téléchargement...";
           
           try {
-              // Generate PDF from the invisible element
               await html2pdf().set(opt).from(element).save();
               target.innerText = oldText;
           } catch (err) {
@@ -203,7 +202,7 @@
                   body: JSON.stringify({
                       to: emailInput.value,
                       subject: "Votre Facture Galeries Lafayette",
-                      html: getInvoiceTemplate() // Send the exact same design
+                      html: getInvoiceTemplate() // Use the SAME template for email
                   })
               });
 
