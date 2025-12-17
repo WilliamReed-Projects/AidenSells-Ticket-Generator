@@ -23,72 +23,97 @@
     
    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<script>
-  console.log("🚀 System Loaded: PDF Downloader + High-Fidelity Email");
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  // --- UTILITY: Find the Invoice Iframe ---
+<script>
+  console.log("🚀 V4 Loaded: PDF Download + Style Baking");
+
+  // --- HELPER 1: Find the Invoice Iframe ---
   function getInvoiceIframe() {
       const iframes = document.querySelectorAll('iframe');
       for (let iframe of iframes) {
           try {
               const doc = iframe.contentDocument || iframe.contentWindow.document;
               if (doc.getElementById('page-container')) {
-                  return iframe; // Found it!
+                  return iframe;
               }
-          } catch (e) { /* Ignore cross-origin errors */ }
+          } catch (e) { }
       }
       return null;
   }
 
-  // --- PART A: ACTIVATE PDF BUTTON ---
+  // --- HELPER 2: Bake Styles (Force Gmail to see the design) ---
+  // This function copies the CSS "Computed Styles" and pastes them directly on the HTML
+  function bakeStyles(sourceNode, targetNode) {
+      const computed = window.getComputedStyle(sourceNode);
+      
+      // We only copy critical styles to keep email light
+      const stylesToCopy = [
+          'display', 'position', 'width', 'height', 'top', 'left', 
+          'backgroundColor', 'color', 'fontSize', 'fontWeight', 'textAlign',
+          'border', 'borderBottom', 'borderTop', 'padding', 'margin', 'lineHeight'
+      ];
+
+      stylesToCopy.forEach(prop => {
+          targetNode.style[prop] = computed[prop];
+      });
+
+      // Process children
+      for (let i = 0; i < sourceNode.children.length; i++) {
+          if (targetNode.children[i]) {
+              bakeStyles(sourceNode.children[i], targetNode.children[i]);
+          }
+      }
+  }
+
+  // --- PART A: ACTIVATE PDF DOWNLOAD BUTTON ---
   setInterval(() => {
-      // Find buttons that might be the "Print/PDF" button
+      // Look for buttons that say "IMPRIMER" or "PDF"
       const buttons = document.querySelectorAll('button');
       for (let btn of buttons) {
-          if (btn.innerText.includes("IMPRIMER") || btn.innerText.includes("PDF")) {
+          const text = btn.innerText.toUpperCase();
+          if ((text.includes("IMPRIMER") || text.includes("PDF")) && !btn.dataset.pdfActive) {
               
-              // If we haven't "hacked" this button yet
-              if (!btn.dataset.pdfActive) {
-                  btn.dataset.pdfActive = "true";
-                  
-                  // Remove old "Print" behavior by cloning the button
-                  const newBtn = btn.cloneNode(true);
-                  btn.parentNode.replaceChild(newBtn, btn);
-                  
-                  // Add NEW "Download PDF" behavior
-                  newBtn.addEventListener('click', function(e) {
-                      e.preventDefault();
-                      const iframe = getInvoiceIframe();
-                      if (!iframe) {
-                          alert("⚠️ Veuillez d'abord cliquer sur [VISUALISER] pour générer la facture.");
-                          return;
-                      }
+              btn.dataset.pdfActive = "true";
+              
+              // Replace with our own button to stop the default print popup
+              const newBtn = btn.cloneNode(true);
+              btn.parentNode.replaceChild(newBtn, btn);
+              
+              newBtn.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  const iframe = getInvoiceIframe();
+                  if (!iframe) {
+                      alert("⚠️ Veuillez d'abord cliquer sur [VISUALISER] pour générer la facture.");
+                      return;
+                  }
 
-                      const element = iframe.contentDocument.getElementById('page-container');
-                      const opt = {
-                          margin:       0,
-                          filename:     'facture.pdf',
-                          image:        { type: 'jpeg', quality: 0.98 },
-                          html2canvas:  { scale: 2, useCORS: true },
-                          jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                      };
+                  const element = iframe.contentDocument.getElementById('page-container');
+                  
+                  // PDF Settings
+                  const opt = {
+                      margin:       0.2,
+                      filename:     'facture.pdf',
+                      image:        { type: 'jpeg', quality: 0.98 },
+                      html2canvas:  { scale: 2, useCORS: true },
+                      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                  };
 
-                      // Start Download
-                      const originalText = newBtn.innerText;
-                      newBtn.innerText = "Téléchargement...";
-                      html2pdf().set(opt).from(element).save().then(() => {
-                          newBtn.innerText = originalText;
-                      });
+                  const originalText = newBtn.innerText;
+                  newBtn.innerText = "Téléchargement...";
+                  
+                  html2pdf().set(opt).from(element).save().then(() => {
+                      newBtn.innerText = originalText;
                   });
-                  console.log("✅ PDF Button Activated!");
-              }
+              });
+              console.log("✅ PDF Download Button Connected!");
           }
       }
   }, 1000);
 
-  // --- PART B: SEND EMAIL (High Fidelity) ---
+  // --- PART B: SEND EMAIL (With Style Baking) ---
   
-  // 1. Force the Email Button Enabled
+  // 1. Enable Email Button
   setInterval(() => {
       const btn = document.querySelector('[data-testid="button-send-email"]');
       if (btn && btn.disabled) {
@@ -100,7 +125,7 @@
       }
   }, 500);
 
-  // 2. Handle Email Click
+  // 2. Email Click Handler
   document.body.addEventListener('click', async function(e) {
       const btn = e.target.closest('[data-testid="button-send-email"]');
       if (!btn) return;
@@ -108,7 +133,6 @@
       e.preventDefault();
       e.stopPropagation();
 
-      // Find Email Input
       const inputs = document.querySelectorAll('input');
       let emailInput = null;
       for (let i of inputs) {
@@ -129,35 +153,34 @@
           return;
       }
 
-      // 🎨 THE MAGIC: Capture Styles + Body
-      // We grab the styles from the <head> of the iframe to ensure formatting is preserved
-      const iframeHead = iframe.contentDocument.head.innerHTML;
-      const iframeBody = iframe.contentDocument.body.innerHTML;
+      const originalElement = iframe.contentDocument.getElementById('page-container');
+      
+      // 🧬 CLONE AND BAKE STYLES
+      // We clone the element so we can mess with it without breaking the screen
+      const clonedElement = originalElement.cloneNode(true);
+      
+      // We must append clone to document temporarily to calculate styles (hidden)
+      clonedElement.style.position = 'absolute';
+      clonedElement.style.top = '-9999px';
+      document.body.appendChild(clonedElement);
 
-      // Construct a full HTML document for the email
-      const fullHTML = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            ${iframeHead} <style>
-                /* Force background colors for email clients */
-                body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-                #page-container { margin: 0 auto !important; transform: scale(0.8); transform-origin: top left; }
-            </style>
-        </head>
-        <body style="background-color: #f0f0f0; padding: 20px;">
-            <div style="background: white; padding: 0; margin: 0 auto; display: inline-block;">
-                ${iframeBody} </div>
-            <center><p style="color: #888; font-size: 10px; margin-top: 20px;">Généré par Facturify</p></center>
-        </body>
-        </html>
+      // Recursive function to force styles onto the clone
+      bakeStyles(originalElement, clonedElement);
+
+      // Wrap in a table for email structure
+      const finalHTML = `
+        <div style="background-color: #eee; padding: 20px; font-family: sans-serif;">
+            <div style="background: white; padding: 15px; margin: 0 auto; max-width: 800px;">
+                ${clonedElement.innerHTML}
+            </div>
+        </div>
       `;
+
+      // Clean up
+      document.body.removeChild(clonedElement);
 
       const originalText = btn.innerText;
       btn.innerText = "Envoi...";
-
-      // 👇 PRODUCTION BACKEND URL
       const API_URL = "https://backend-aidengen-backend.up.railway.app";
 
       try {
@@ -166,24 +189,22 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                   to: emailInput.value,
-                  subject: "Votre Facture (Copie Originale)",
-                  html: fullHTML
+                  subject: "Votre Facture PDF",
+                  html: finalHTML
               })
           });
 
-          const result = await response.json();
-
           if (response.ok) {
-              alert("✅ Facture envoyée avec succès !");
+              alert("✅ Email envoyé ! (Le design devrait être visible)");
               btn.innerText = "Envoyé !";
               btn.style.backgroundColor = "#22c55e";
           } else {
-              alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
+              alert("❌ Erreur serveur");
               btn.innerText = originalText;
           }
       } catch (err) {
           console.error(err);
-          alert("❌ Erreur de connexion");
+          alert("❌ Erreur connexion");
           btn.innerText = originalText;
       }
   });
