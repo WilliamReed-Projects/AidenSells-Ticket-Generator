@@ -20,209 +20,119 @@
   </head>
   <body>
     <div id="root"></div>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<style>
-    /* Force buttons to be clickable and look active */
-    button:disabled, button[disabled] {
-        opacity: 1 !important;
-        cursor: pointer !important;
-        pointer-events: auto !important;
-        filter: none !important;
-    }
-</style>
+    <style>
+        /* Force buttons to be interactive */
+        button:disabled, button[disabled] {
+            opacity: 1 !important;
+            cursor: pointer !important;
+            pointer-events: auto !important;
+            filter: none !important;
+        }
+    </style>
 
-<script>
-  console.log("🚀 SYSTEM LOADED: V5 (Template Engine)");
+    <script>
+      console.log("🚀 SYSTEM LOADED: Backend PDF & Email Generator");
 
-  // --- 1. THE TEMPLATE (Shared by PDF & Email) ---
-  function getInvoiceTemplate() {
-      return `
-      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #ffffff; padding: 40px; color: #000; font-size: 12px; width: 100%; max-width: 800px; margin: 0 auto;">
-        
-        <table style="width: 100%; margin-bottom: 30px; border-collapse: collapse;">
-            <tr>
-                <td style="vertical-align: top; width: 50%;">
-                    <h1 style="font-size: 18px; margin: 0; font-weight: bold; text-transform: uppercase;">FACTURE : N°12345678</h1>
-                </td>
-                <td style="vertical-align: top; width: 50%; text-align: right;">
-                    <p style="margin: 0;"><strong>Commande :</strong> 12345678901</p>
-                    <p style="margin: 2px 0;"><strong>Date de facture :</strong> 10/12/2025</p>
-                    <p style="margin: 2px 0;"><strong>Date de commande :</strong> 10/12/2025</p>
-                    <p style="margin: 2px 0;"><strong>Devise :</strong> EUR</p>
-                </td>
-            </tr>
-        </table>
-
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
-            <thead>
-                <tr style="border-bottom: 2px solid #000;">
-                    <th style="text-align: left; padding: 8px 0;">Référence</th>
-                    <th style="text-align: left; padding: 8px 0;">Article</th>
-                    <th style="text-align: center; padding: 8px 0;">Qté</th>
-                    <th style="text-align: right; padding: 8px 0;">Prix Unit. HT</th>
-                    <th style="text-align: right; padding: 8px 0;">Total HT</th>
-                    <th style="text-align: right; padding: 8px 0;">TVA</th>
-                    <th style="text-align: right; padding: 8px 0;">Total TTC</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 10px 0;">ABC123</td>
-                    <td style="padding: 10px 0;">SAC À MAIN CUIR</td>
-                    <td style="padding: 10px 0; text-align: center;">1</td>
-                    <td style="padding: 10px 0; text-align: right;">249,17 €</td>
-                    <td style="padding: 10px 0; text-align: right;">249,17 €</td>
-                    <td style="padding: 10px 0; text-align: right;">49,83 € (20%)</td>
-                    <td style="padding: 10px 0; text-align: right;">299,00 €</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #000;">
-                    <td style="padding: 10px 0;">-</td>
-                    <td style="padding: 10px 0;">Frais de port</td>
-                    <td style="padding: 10px 0; text-align: center;">1</td>
-                    <td style="padding: 10px 0; text-align: right;">0 €</td>
-                    <td style="padding: 10px 0; text-align: right;">0 €</td>
-                    <td style="padding: 10px 0; text-align: right;">0 € (20%)</td>
-                    <td style="padding: 10px 0; text-align: right;">0 €</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <table style="width: 100%; margin-bottom: 30px; border-collapse: collapse;">
-            <tr>
-                <td style="width: 60%; vertical-align: top;">
-                     <p style="margin: 0 0 10px 0;"><strong>MODE DE PAIEMENT</strong><br>Carte bancaire : 299,00 €</p>
-                     <p style="margin: 0;"><strong>Total de points fidélité cumulé :</strong> 640</p>
-                </td>
-                <td style="width: 40%; vertical-align: top;">
-                    <table style="width: 100%; font-size: 12px;">
-                        <tr><td style="padding: 4px 0;">Total HT</td><td style="text-align: right;">249,17 €</td></tr>
-                        <tr><td style="padding: 4px 0;">Frais de port HT</td><td style="text-align: right;">0,00 €</td></tr>
-                        <tr><td style="padding: 4px 0;">Total TVA</td><td style="text-align: right;">49,83 €</td></tr>
-                        <tr style="font-weight: bold; font-size: 14px; border-top: 1px solid #000;">
-                            <td style="padding: 10px 0;">Total Facturé TTC</td><td style="text-align: right;">299,00 €</td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-        <table style="width: 100%; margin-bottom: 40px; border-collapse: collapse;">
-            <tr>
-                <td style="width: 48%; background: #f9f9f9; padding: 15px; vertical-align: top;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase;">Adresse de Facturation</h3>
-                    <p style="margin: 0; line-height: 1.5;">Madame MARIE DUPONT<br>25 Rue du Commerce<br>75015 PARIS<br>France Métropolitaine</p>
-                </td>
-                <td style="width: 4%;"></td>
-                <td style="width: 48%; background: #f9f9f9; padding: 15px; vertical-align: top;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase;">Adresse de Livraison</h3>
-                    <p style="margin: 0; line-height: 1.5;">Madame MARIE DUPONT<br>25 Rue du Commerce<br>75015 PARIS<br>France Métropolitaine</p>
-                </td>
-            </tr>
-        </table>
-
-        <div style="font-size: 10px; color: #666; text-align: justify; border-top: 1px solid #eee; padding-top: 20px; line-height: 1.4;">
-            <p>TVA payée sur les débits. En cas de retard de paiement, les pénalités de retard sont égales à 3 fois le taux d’intérêt légal. Le client professionnel devra également s’acquitter d’une indemnité forfaitaire de 40 euros pour frais de recouvrement.</p>
-            <p>Merci d’avoir choisi <strong>Galerieslafayette.com</strong>. Pour toute question concernant cette facture, pour connaître une procédure de retour ou pour bénéficier de votre droit de rétractation, veuillez contacter notre service clientèle via le formulaire de contact sur www.galerieslafayette.com/contact.</p>
-            <p style="text-align: center; margin-top: 20px; font-weight: bold; color: #000;">GALERIES LAFAYETTE MANAGEMENT – SAS au Capital de 147.184.338 euros – siège social : 27 rue de Châteaudun, 75446 Paris Cedex 09 552 116 329 RCS PARIS – TVA intracommunautaire : FR85552116329</p>
-        </div>
-      </div>
-      `;
-  }
-
-  // --- 2. GLOBAL HANDLER ---
-  document.addEventListener('click', async function(e) {
-      
-      const target = e.target.closest('button');
-      if (!target) return;
-      const btnText = target.innerText.toUpperCase();
-
-      // === A. PDF DOWNLOAD LOGIC (USING TEMPLATE NOW) ===
-      if (btnText.includes("IMPRIMER") || btnText.includes("PDF")) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          // Check if "Visualiser" was clicked (just for UX flow)
-          const iframes = document.querySelectorAll('iframe');
-          let ready = false;
-          for(let f of iframes) { try { if(f.contentDocument.getElementById('page-container')) ready = true; } catch(e){} }
-          
-          if (!ready) {
-              alert("⚠️ Veuillez cliquer sur [VISUALISER] d'abord.");
-              return;
-          }
-
-          // 💡 KEY FIX: Create PDF from our PERFECT TEMPLATE
-          const element = document.createElement('div');
-          element.innerHTML = getInvoiceTemplate(); 
-          element.style.width = '800px'; // Force width for PDF
-
-          const opt = {
-              margin: 0.2,
-              filename: 'facture_galeries.pdf',
-              image: { type: 'jpeg', quality: 0.98 },
-              html2canvas: { scale: 2, useCORS: true },
-              jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      // --- 1. DATA SCRAPER (Gets values from React Inputs) ---
+      function getInvoiceData() {
+          const getValue = (testid) => {
+              const el = document.querySelector(`[data-testid="${testid}"]`) || 
+                         document.querySelector(`input[data-testid*="${testid}"]`);
+              return el ? el.value : "";
           };
 
-          const oldText = target.innerText;
-          target.innerText = "Téléchargement...";
+          // We try to grab the "Galeries Lafayette" specific inputs first, 
+          // falling back to generic ones if needed.
+          return {
+              invoiceNum:   getValue("input-lafayette-invoice-num") || "12345678",
+              orderNum:     getValue("input-lafayette-order-num") || "12345678901",
+              date:         getValue("input-lafayette-date") || "10/12/2025",
+              productName:  getValue("input-lafayette-product-name") || "SAC À MAIN CUIR",
+              productRef:   getValue("input-lafayette-product-ref") || "ABC123",
+              price:        getValue("input-price-ttc") || "299",
+              customerName: getValue("input-lafayette-customer-name") || "MARIE DUPONT",
+              address:      getValue("input-lafayette-address") || "25 Rue du Commerce",
+              zip:          getValue("input-lafayette-zip") || "75015",
+              city:         getValue("input-lafayette-city") || "PARIS"
+          };
+      }
+
+      // --- 2. GLOBAL CLICK LISTENER ---
+      document.addEventListener('click', async function(e) {
+          const target = e.target.closest('button');
+          if (!target) return;
           
-          try {
-              await html2pdf().set(opt).from(element).save();
-              target.innerText = oldText;
-          } catch (err) {
-              console.error(err);
-              target.innerText = oldText;
-          }
-      }
+          const btnText = target.innerText.toUpperCase();
+          const isPrint = btnText.includes("IMPRIMER") || btnText.includes("PDF");
+          const isEmail = btnText.includes("ENVOYER");
 
-      // === B. EMAIL SEND LOGIC ===
-      if (btnText.includes("ENVOYER") || target.getAttribute('data-testid') === "button-send-email") {
-          e.preventDefault();
-          e.stopPropagation();
+          // Handle "Print/PDF" OR "Send Email"
+          if (isPrint || isEmail) {
+              e.preventDefault();
+              e.stopPropagation();
 
-          const inputs = document.querySelectorAll('input');
-          let emailInput = null;
-          for (let i of inputs) {
-              if (i.value.includes("@")) { emailInput = i; break; }
-          }
+              const originalText = target.innerText;
+              target.innerText = "Traitement...";
+              
+              // 1. Prepare Data
+              const data = getInvoiceData();
 
-          if (!emailInput) {
-              alert("⚠️ Entrez un email.");
-              return;
-          }
-
-          const oldText = target.innerText;
-          target.innerText = "Envoi...";
-
-          try {
-              const response = await fetch("https://backend-aidengen-backend.up.railway.app/api/invoices/email", {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                      to: emailInput.value,
-                      subject: "Votre Facture Galeries Lafayette",
-                      html: getInvoiceTemplate() // Use the SAME template for email
-                  })
-              });
-
-              if (response.ok) {
-                  alert("✅ Email envoyé !");
-                  target.innerText = "Envoyé !";
-                  target.style.background = "#22c55e";
-              } else {
-                  alert("❌ Erreur serveur");
-                  target.innerText = oldText;
+              // 2. Handle Email Logic
+              if (isEmail) {
+                  const emailInput = document.querySelector('input[type="email"]');
+                  if (!emailInput || !emailInput.value.includes("@")) {
+                      alert("⚠️ Veuillez entrer une adresse email valide.");
+                      target.innerText = originalText;
+                      return;
+                  }
+                  data.email = emailInput.value;
+                  data.sendEmail = true;
               }
-          } catch (err) {
-              console.error(err);
-              alert("❌ Erreur connexion");
-              target.innerText = oldText;
-          }
-      }
 
-  }, true);
-</script>
+              // 3. Call Backend
+              // 👇 UPDATED BACKEND URL
+              const API_URL = "https://backend-aidengen-backend.up.railway.app/api/invoices/generate";
+
+              try {
+                  const response = await fetch(API_URL, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(data)
+                  });
+
+                  if (response.ok) {
+                      // ⬇️ DOWNLOAD PDF (Both for 'Print' and 'Email' actions)
+                      const blob = await response.blob();
+                      const downloadUrl = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = downloadUrl;
+                      a.download = "facture_galeries.pdf";
+                      document.body.appendChild(a);
+                      a.click();
+                      a.remove();
+                      window.URL.revokeObjectURL(downloadUrl);
+
+                      // ✅ Success Message
+                      if (isEmail) {
+                          alert("✅ Email envoyé avec succès ! (PDF téléchargé)");
+                          target.innerText = "Envoyé !";
+                          target.style.backgroundColor = "#22c55e";
+                      } else {
+                          target.innerText = originalText;
+                      }
+                  } else {
+                      const errorData = await response.json();
+                      alert("❌ Erreur: " + (errorData.message || "Erreur serveur"));
+                      target.innerText = originalText;
+                  }
+              } catch (err) {
+                  console.error(err);
+                  alert("❌ Erreur de connexion au serveur backend.");
+                  target.innerText = originalText;
+              }
+          }
+      }, true); // Capture phase to override React
+    </script>
   </body>
 </html>
