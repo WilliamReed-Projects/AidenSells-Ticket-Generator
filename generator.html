@@ -21,10 +21,74 @@
   <body>
     <div id="root"></div>
     
-   <script>
-  console.log("📧 Invoice Scraper V3 Loaded 🚀");
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  // 1. Force the button to be enabled
+<script>
+  console.log("🚀 System Loaded: PDF Downloader + High-Fidelity Email");
+
+  // --- UTILITY: Find the Invoice Iframe ---
+  function getInvoiceIframe() {
+      const iframes = document.querySelectorAll('iframe');
+      for (let iframe of iframes) {
+          try {
+              const doc = iframe.contentDocument || iframe.contentWindow.document;
+              if (doc.getElementById('page-container')) {
+                  return iframe; // Found it!
+              }
+          } catch (e) { /* Ignore cross-origin errors */ }
+      }
+      return null;
+  }
+
+  // --- PART A: ACTIVATE PDF BUTTON ---
+  setInterval(() => {
+      // Find buttons that might be the "Print/PDF" button
+      const buttons = document.querySelectorAll('button');
+      for (let btn of buttons) {
+          if (btn.innerText.includes("IMPRIMER") || btn.innerText.includes("PDF")) {
+              
+              // If we haven't "hacked" this button yet
+              if (!btn.dataset.pdfActive) {
+                  btn.dataset.pdfActive = "true";
+                  
+                  // Remove old "Print" behavior by cloning the button
+                  const newBtn = btn.cloneNode(true);
+                  btn.parentNode.replaceChild(newBtn, btn);
+                  
+                  // Add NEW "Download PDF" behavior
+                  newBtn.addEventListener('click', function(e) {
+                      e.preventDefault();
+                      const iframe = getInvoiceIframe();
+                      if (!iframe) {
+                          alert("⚠️ Veuillez d'abord cliquer sur [VISUALISER] pour générer la facture.");
+                          return;
+                      }
+
+                      const element = iframe.contentDocument.getElementById('page-container');
+                      const opt = {
+                          margin:       0,
+                          filename:     'facture.pdf',
+                          image:        { type: 'jpeg', quality: 0.98 },
+                          html2canvas:  { scale: 2, useCORS: true },
+                          jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                      };
+
+                      // Start Download
+                      const originalText = newBtn.innerText;
+                      newBtn.innerText = "Téléchargement...";
+                      html2pdf().set(opt).from(element).save().then(() => {
+                          newBtn.innerText = originalText;
+                      });
+                  });
+                  console.log("✅ PDF Button Activated!");
+              }
+          }
+      }
+  }, 1000);
+
+  // --- PART B: SEND EMAIL (High Fidelity) ---
+  
+  // 1. Force the Email Button Enabled
   setInterval(() => {
       const btn = document.querySelector('[data-testid="button-send-email"]');
       if (btn && btn.disabled) {
@@ -36,7 +100,7 @@
       }
   }, 500);
 
-  // 2. The Click Listener
+  // 2. Handle Email Click
   document.body.addEventListener('click', async function(e) {
       const btn = e.target.closest('[data-testid="button-send-email"]');
       if (!btn) return;
@@ -44,6 +108,7 @@
       e.preventDefault();
       e.stopPropagation();
 
+      // Find Email Input
       const inputs = document.querySelectorAll('input');
       let emailInput = null;
       for (let i of inputs) {
@@ -54,82 +119,71 @@
       }
 
       if (!emailInput || !emailInput.value.includes("@")) {
-          alert("⚠️ Please enter a valid email address.");
+          alert("⚠️ Veuillez entrer une adresse email valide.");
           return;
       }
 
-      // 🕵️‍♂️ FIND THE INVOICE (IFRAME HUNTER)
-      let invoiceElement = document.getElementById('page-container');
-      if (!invoiceElement) {
-          console.log("🔍 Searching inside iframes...");
-          const iframes = document.querySelectorAll('iframe');
-          for (let iframe of iframes) {
-              try {
-                  const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-                  const found = innerDoc.getElementById('page-container');
-                  if (found) {
-                      invoiceElement = found;
-                      break;
-                  }
-              } catch (err) { console.log("⚠️ Iframe security:", err); }
-          }
-      }
-
-      if (!invoiceElement) {
-          alert("❌ Invoice not found. Please click 'Visualiser' first to generate it!");
+      const iframe = getInvoiceIframe();
+      if (!iframe) {
+          alert("❌ Facture introuvable. Cliquez sur [VISUALISER] d'abord !");
           return;
       }
 
-      // 🎨 STYLE INJECTION (The Secret Sauce)
-      // We wrap the raw content in a nice box so it looks like a paper receipt in the email.
-      const emailBody = `
-        <div style="font-family: Arial, sans-serif; background-color: #eeeeee; padding: 40px; text-align: center;">
-            <div style="max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: left; border: 1px solid #ddd;">
-                <h2 style="text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; color: #333;">INVOICE COPY</h2>
-                
-                <div style="font-size: 14px; line-height: 1.5; color: #333; overflow-x: auto;">
-                    ${invoiceElement.innerHTML}
-                </div>
+      // 🎨 THE MAGIC: Capture Styles + Body
+      // We grab the styles from the <head> of the iframe to ensure formatting is preserved
+      const iframeHead = iframe.contentDocument.head.innerHTML;
+      const iframeBody = iframe.contentDocument.body.innerHTML;
 
-                <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px; text-align: center; color: #888; font-size: 12px;">
-                    Sent via Facturify
-                </div>
-            </div>
-        </div>
+      // Construct a full HTML document for the email
+      const fullHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            ${iframeHead} <style>
+                /* Force background colors for email clients */
+                body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                #page-container { margin: 0 auto !important; transform: scale(0.8); transform-origin: top left; }
+            </style>
+        </head>
+        <body style="background-color: #f0f0f0; padding: 20px;">
+            <div style="background: white; padding: 0; margin: 0 auto; display: inline-block;">
+                ${iframeBody} </div>
+            <center><p style="color: #888; font-size: 10px; margin-top: 20px;">Généré par Facturify</p></center>
+        </body>
+        </html>
       `;
 
       const originalText = btn.innerText;
-      btn.innerText = "Sending...";
+      btn.innerText = "Envoi...";
 
-      // 👇 YOUR PRODUCTION BACKEND URL
+      // 👇 PRODUCTION BACKEND URL
       const API_URL = "https://backend-aidengen-backend.up.railway.app";
 
       try {
           const response = await fetch(`${API_URL}/api/invoices/email`, {
               method: 'POST',
-              headers: { 
-                  'Content-Type': 'application/json' 
-              },
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                   to: emailInput.value,
-                  subject: "Your Facturify Receipt",
-                  html: emailBody
+                  subject: "Votre Facture (Copie Originale)",
+                  html: fullHTML
               })
           });
 
           const result = await response.json();
 
           if (response.ok) {
-              alert("✅ Email sent successfully!");
-              btn.innerText = "Sent!";
+              alert("✅ Facture envoyée avec succès !");
+              btn.innerText = "Envoyé !";
               btn.style.backgroundColor = "#22c55e";
           } else {
-              alert("❌ Error: " + (result.message || "Unknown error"));
+              alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
               btn.innerText = originalText;
           }
       } catch (err) {
           console.error(err);
-          alert("❌ Connection Error (Check Console)");
+          alert("❌ Erreur de connexion");
           btn.innerText = originalText;
       }
   });
