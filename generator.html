@@ -20,10 +20,10 @@
   </head>
   <body>
     <div id="root"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-    /* Force buttons to look active */
+    /* Force buttons to be clickable and look active */
     button:disabled, button[disabled] {
         opacity: 1 !important;
         cursor: pointer !important;
@@ -33,9 +33,9 @@
 </style>
 
 <script>
-  console.log("🚀 SYSTEM LOADED: Template Engine V5 (Final Fix)");
+  console.log("🚀 SYSTEM LOADED: V5 (Template Engine)");
 
-  // --- 1. THE MASTER TEMPLATE (Used for both PDF & Email) ---
+  // --- 1. THE TEMPLATE (Shared by PDF & Email) ---
   function getInvoiceTemplate() {
       return `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #ffffff; padding: 40px; color: #000; font-size: 12px; width: 100%; max-width: 800px; margin: 0 auto;">
@@ -123,7 +123,8 @@
 
         <div style="font-size: 10px; color: #666; text-align: justify; border-top: 1px solid #eee; padding-top: 20px; line-height: 1.4;">
             <p>TVA payée sur les débits. En cas de retard de paiement, les pénalités de retard sont égales à 3 fois le taux d’intérêt légal. Le client professionnel devra également s’acquitter d’une indemnité forfaitaire de 40 euros pour frais de recouvrement.</p>
-            <p>Merci d’avoir choisi <strong>Galerieslafayette.com</strong>. GALERIES LAFAYETTE MANAGEMENT – SAS au Capital de 147.184.338 euros – siège social : 27 rue de Châteaudun, 75446 Paris Cedex 09.</p>
+            <p>Merci d’avoir choisi <strong>Galerieslafayette.com</strong>. Pour toute question concernant cette facture, pour connaître une procédure de retour ou pour bénéficier de votre droit de rétractation, veuillez contacter notre service clientèle via le formulaire de contact sur www.galerieslafayette.com/contact.</p>
+            <p style="text-align: center; margin-top: 20px; font-weight: bold; color: #000;">GALERIES LAFAYETTE MANAGEMENT – SAS au Capital de 147.184.338 euros – siège social : 27 rue de Châteaudun, 75446 Paris Cedex 09 552 116 329 RCS PARIS – TVA intracommunautaire : FR85552116329</p>
         </div>
       </div>
       `;
