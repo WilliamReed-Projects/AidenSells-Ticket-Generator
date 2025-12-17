@@ -21,81 +21,95 @@
   <body>
     <div id="root"></div>
     
-    <script>
-      console.log("📧 Production Email Script Loaded 🚀");
+<script>
+  console.log("📧 Invoice Scraper Script Loaded 🚀");
 
-      // 1. Force the button to be enabled (The Enforcer)
-      setInterval(() => {
-          const btn = document.querySelector('[data-testid="button-send-email"]');
-          if (btn && btn.disabled) {
-              btn.disabled = false;
-              btn.style.opacity = "1";
-              btn.style.cursor = "pointer";
-              btn.style.pointerEvents = "auto";
-              btn.classList.remove('cursor-not-allowed', 'opacity-50');
+  // 1. Force the button to be enabled (The Enforcer)
+  setInterval(() => {
+      const btn = document.querySelector('[data-testid="button-send-email"]');
+      if (btn && btn.disabled) {
+          btn.disabled = false;
+          btn.style.opacity = "1";
+          btn.style.cursor = "pointer";
+          btn.style.pointerEvents = "auto";
+          btn.classList.remove('cursor-not-allowed', 'opacity-50');
+      }
+  }, 500);
+
+  // 2. The Click Listener
+  document.body.addEventListener('click', async function(e) {
+      const btn = e.target.closest('[data-testid="button-send-email"]');
+      if (!btn) return;
+
+      console.log("Button Clicked!");
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Find Email Input
+      const inputs = document.querySelectorAll('input');
+      let emailInput = null;
+      for (let i of inputs) {
+          if (i.type === "email" || i.value.includes("@") || i.placeholder.toLowerCase().includes("email")) {
+              emailInput = i;
+              break;
           }
-      }, 500);
+      }
 
-      // 2. The Click Listener
-      document.body.addEventListener('click', async function(e) {
-          const btn = e.target.closest('[data-testid="button-send-email"]');
-          if (!btn) return;
+      if (!emailInput || !emailInput.value.includes("@")) {
+          alert("⚠️ Veuillez entrer une adresse email valide.");
+          return;
+      }
 
-          console.log("Button Clicked!");
-          e.preventDefault();
-          e.stopPropagation();
+      // 🕵️‍♂️ CAPTURE THE INVOICE HTML
+      const invoiceElement = document.getElementById('page-container');
+      if (!invoiceElement) {
+          alert("❌ Impossible de trouver la facture à l'écran. Veuillez générer une facture d'abord.");
+          return;
+      }
 
-          // Find Email Input
-          const inputs = document.querySelectorAll('input');
-          let emailInput = null;
-          for (let i of inputs) {
-              if (i.type === "email" || i.value.includes("@") || i.placeholder.toLowerCase().includes("email")) {
-                  emailInput = i;
-                  break;
-              }
-          }
+      // We wrap it in a container to center it in the email
+      const invoiceHTML = `
+        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;">
+            <h2>Votre Facture Facturify</h2>
+            <div style="background: white; padding: 20px; border-radius: 8px; display: inline-block; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                ${invoiceElement.innerHTML}
+            </div>
+            <p style="margin-top: 20px; color: #888; font-size: 12px;">Généré par Facturify</p>
+        </div>
+      `;
 
-          if (!emailInput || !emailInput.value.includes("@")) {
-              alert("⚠️ Veuillez entrer une adresse email valide.");
-              return;
-          }
+      const originalText = btn.innerText;
+      btn.innerText = "Envoi...";
 
-          const originalText = btn.innerText;
-          btn.innerText = "Envoi...";
+      const API_URL = "https://backend-aidengen-backend.up.railway.app";
 
-          // 👇 PRODUCTION BACKEND URL
-          const API_URL = "https://backend-aidengen-backend.up.railway.app";
+      try {
+          const response = await fetch(`${API_URL}/api/invoices/email`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  to: emailInput.value,
+                  subject: "Votre Reçu Facturify",
+                  html: invoiceHTML // 👈 SENDING THE REAL INVOICE NOW!
+              })
+          });
 
-          try {
-              const response = await fetch(`${API_URL}/api/invoices/email`, {
-                  method: 'POST',
-                  headers: { 
-                      'Content-Type': 'application/json' 
-                  },
-                  // ❌ NO CREDENTIALS for Cross-Domain Compatibility
-                  body: JSON.stringify({
-                      to: emailInput.value,
-                      subject: "Votre Reçu Facturify",
-                      html: "<h1>Merci pour votre achat!</h1><p>Voici votre ticket.</p>" 
-                  })
-              });
+          const result = await response.json();
 
-              const result = await response.json();
-
-              if (response.ok) {
-                  alert("✅ Email envoyé avec succès !");
-                  btn.innerText = "Envoyé !";
-                  btn.style.backgroundColor = "#22c55e";
-              } else {
-                  alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
-                  btn.innerText = originalText;
-              }
-          } catch (err) {
-              console.error(err);
-              alert("❌ Erreur de connexion (Check Console)");
+          if (response.ok) {
+              alert("✅ Facture envoyée avec succès !");
+              btn.innerText = "Envoyé !";
+              btn.style.backgroundColor = "#22c55e";
+          } else {
+              alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
               btn.innerText = originalText;
           }
-      });
-    </script>
+      } catch (err) {
+          console.error(err);
+          alert("❌ Erreur de connexion (Check Console)");
+          btn.innerText = originalText;
+      }
+  });
+</script>
   </body>
 </html>
