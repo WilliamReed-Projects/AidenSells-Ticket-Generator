@@ -22,9 +22,9 @@
     <div id="root"></div>
     
    <script>
-  console.log("📧 Invoice Scraper V2 Loaded 🚀");
+  console.log("📧 Invoice Scraper V3 Loaded 🚀");
 
-  // 1. Force the button to be enabled (The Enforcer)
+  // 1. Force the button to be enabled
   setInterval(() => {
       const btn = document.querySelector('[data-testid="button-send-email"]');
       if (btn && btn.disabled) {
@@ -41,11 +41,9 @@
       const btn = e.target.closest('[data-testid="button-send-email"]');
       if (!btn) return;
 
-      console.log("Button Clicked!");
       e.preventDefault();
       e.stopPropagation();
 
-      // Find Email Input
       const inputs = document.querySelectorAll('input');
       let emailInput = null;
       for (let i of inputs) {
@@ -60,10 +58,8 @@
           return;
       }
 
-      // 🕵️‍♂️ CAPTURE THE INVOICE HTML (SMART SEARCH)
+      // 🕵️‍♂️ FIND THE INVOICE (IFRAME HUNTER)
       let invoiceElement = document.getElementById('page-container');
-      
-      // If not found, look inside IFRAMES
       if (!invoiceElement) {
           console.log("🔍 Searching inside iframes...");
           const iframes = document.querySelectorAll('iframe');
@@ -73,45 +69,51 @@
                   const found = innerDoc.getElementById('page-container');
                   if (found) {
                       invoiceElement = found;
-                      console.log("✅ Invoice found inside an iframe!");
                       break;
                   }
-              } catch (err) {
-                  console.log("⚠️ Could not access iframe (Security restriction):", err);
-              }
+              } catch (err) { console.log("⚠️ Iframe security:", err); }
           }
       }
 
       if (!invoiceElement) {
-          alert("❌ Could not find the invoice on screen. Please click 'Visualiser' to generate it first.");
+          alert("❌ Invoice not found. Please click 'Visualiser' first to generate it!");
           return;
       }
 
-      // Prepare HTML for Email
-      // We wrap it to make it look decent in the email
-      const invoiceHTML = `
-        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;">
-            <h2>Votre Facture</h2>
-            <div style="background: white; padding: 10px; border-radius: 8px; display: inline-block; text-align: left; overflow: hidden;">
-                ${invoiceElement.innerHTML}
+      // 🎨 STYLE INJECTION (The Secret Sauce)
+      // We wrap the raw content in a nice box so it looks like a paper receipt in the email.
+      const emailBody = `
+        <div style="font-family: Arial, sans-serif; background-color: #eeeeee; padding: 40px; text-align: center;">
+            <div style="max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: left; border: 1px solid #ddd;">
+                <h2 style="text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; color: #333;">INVOICE COPY</h2>
+                
+                <div style="font-size: 14px; line-height: 1.5; color: #333; overflow-x: auto;">
+                    ${invoiceElement.innerHTML}
+                </div>
+
+                <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px; text-align: center; color: #888; font-size: 12px;">
+                    Sent via Facturify
+                </div>
             </div>
-            <p style="margin-top: 20px; color: #888; font-size: 12px;">Envoyé via Facturify</p>
         </div>
       `;
 
       const originalText = btn.innerText;
       btn.innerText = "Sending...";
 
+      // 👇 YOUR PRODUCTION BACKEND URL
       const API_URL = "https://backend-aidengen-backend.up.railway.app";
 
       try {
           const response = await fetch(`${API_URL}/api/invoices/email`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 
+                  'Content-Type': 'application/json' 
+              },
               body: JSON.stringify({
                   to: emailInput.value,
-                  subject: "Votre Reçu Facturify",
-                  html: invoiceHTML
+                  subject: "Your Facturify Receipt",
+                  html: emailBody
               })
           });
 
