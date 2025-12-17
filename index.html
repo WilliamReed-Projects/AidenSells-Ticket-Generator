@@ -23,16 +23,27 @@
     
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<script>
-  console.log("🚀 V4 Loaded: PDF Download + Style Baking");
+<style>
+    /* 1. FORCE BUTTONS TO LOOK ACTIVE */
+    button:disabled, button[disabled] {
+        opacity: 1 !important;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+        filter: none !important;
+    }
+</style>
 
-  // --- HELPER 1: Find the Invoice Iframe ---
+<script>
+  console.log("⚡ GOD MODE SCRIPT LOADED");
+
+  // --- HELPER: Get Iframe Safely ---
   function getInvoiceIframe() {
       const iframes = document.querySelectorAll('iframe');
       for (let iframe of iframes) {
           try {
               const doc = iframe.contentDocument || iframe.contentWindow.document;
-              if (doc.getElementById('page-container')) {
+              // Check if it has the invoice container
+              if (doc.getElementById('page-container') || doc.body.innerText.includes("FACTURE")) {
                   return iframe;
               }
           } catch (e) { }
@@ -40,172 +51,118 @@
       return null;
   }
 
-  // --- HELPER 2: Bake Styles (Force Gmail to see the design) ---
-  // This function copies the CSS "Computed Styles" and pastes them directly on the HTML
-  function bakeStyles(sourceNode, targetNode) {
-      const computed = window.getComputedStyle(sourceNode);
+  // --- GLOBAL CLICK INTERCEPTOR (Bypasses React) ---
+  document.addEventListener('click', async function(e) {
       
-      // We only copy critical styles to keep email light
-      const stylesToCopy = [
-          'display', 'position', 'width', 'height', 'top', 'left', 
-          'backgroundColor', 'color', 'fontSize', 'fontWeight', 'textAlign',
-          'border', 'borderBottom', 'borderTop', 'padding', 'margin', 'lineHeight'
-      ];
+      // 1. IDENTIFY THE BUTTON
+      const target = e.target.closest('button');
+      if (!target) return;
 
-      stylesToCopy.forEach(prop => {
-          targetNode.style[prop] = computed[prop];
-      });
+      const btnText = target.innerText.toUpperCase();
 
-      // Process children
-      for (let i = 0; i < sourceNode.children.length; i++) {
-          if (targetNode.children[i]) {
-              bakeStyles(sourceNode.children[i], targetNode.children[i]);
+      // --- CASE A: PDF DOWNLOAD ---
+      if (btnText.includes("IMPRIMER") || btnText.includes("PDF")) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log("🖨️ PDF Click Intercepted!");
+
+          const iframe = getInvoiceIframe();
+          if (!iframe) {
+              alert("⚠️ Veuillez cliquer sur [VISUALISER] et attendre que la facture apparaisse.");
+              return;
+          }
+
+          const element = iframe.contentDocument.getElementById('page-container') || iframe.contentDocument.body;
+          
+          const opt = {
+              margin:       0.2,
+              filename:     'facture.pdf',
+              image:        { type: 'jpeg', quality: 0.98 },
+              html2canvas:  { scale: 2, useCORS: true },
+              jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+          };
+
+          const oldText = target.innerText;
+          target.innerText = "⏳ Génération...";
+          
+          try {
+              await html2pdf().set(opt).from(element).save();
+              target.innerText = oldText;
+          } catch (err) {
+              console.error(err);
+              alert("Erreur PDF: " + err.message);
+              target.innerText = oldText;
           }
       }
-  }
 
-  // --- PART A: ACTIVATE PDF DOWNLOAD BUTTON ---
-  setInterval(() => {
-      // Look for buttons that say "IMPRIMER" or "PDF"
-      const buttons = document.querySelectorAll('button');
-      for (let btn of buttons) {
-          const text = btn.innerText.toUpperCase();
-          if ((text.includes("IMPRIMER") || text.includes("PDF")) && !btn.dataset.pdfActive) {
-              
-              btn.dataset.pdfActive = "true";
-              
-              // Replace with our own button to stop the default print popup
-              const newBtn = btn.cloneNode(true);
-              btn.parentNode.replaceChild(newBtn, btn);
-              
-              newBtn.addEventListener('click', function(e) {
-                  e.preventDefault();
-                  const iframe = getInvoiceIframe();
-                  if (!iframe) {
-                      alert("⚠️ Veuillez d'abord cliquer sur [VISUALISER] pour générer la facture.");
-                      return;
-                  }
+      // --- CASE B: EMAIL SEND ---
+      if (btnText.includes("ENVOYER") || target.getAttribute('data-testid') === "button-send-email") {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log("📧 Email Click Intercepted!");
 
-                  const element = iframe.contentDocument.getElementById('page-container');
-                  
-                  // PDF Settings
-                  const opt = {
-                      margin:       0.2,
-                      filename:     'facture.pdf',
-                      image:        { type: 'jpeg', quality: 0.98 },
-                      html2canvas:  { scale: 2, useCORS: true },
-                      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                  };
+          // Get Email Input
+          const inputs = document.querySelectorAll('input');
+          let emailInput = null;
+          for (let i of inputs) {
+              if (i.value.includes("@")) { emailInput = i; break; }
+          }
 
-                  const originalText = newBtn.innerText;
-                  newBtn.innerText = "Téléchargement...";
-                  
-                  html2pdf().set(opt).from(element).save().then(() => {
-                      newBtn.innerText = originalText;
-                  });
+          if (!emailInput) {
+              alert("⚠️ Veuillez entrer un email.");
+              return;
+          }
+
+          const iframe = getInvoiceIframe();
+          if (!iframe) {
+              alert("⚠️ Veuillez cliquer sur [VISUALISER] d'abord.");
+              return;
+          }
+
+          // 📸 SNAPSHOT: Grab EVERYTHING from the iframe (Styles + Body)
+          const iframeDoc = iframe.contentDocument;
+          const fullHTML = `
+            <html>
+                <head>${iframeDoc.head.innerHTML}</head>
+                <body style="background: #fff; margin: 0; padding: 20px;">
+                    <div style="transform: scale(0.8); transform-origin: top left;">
+                        ${iframeDoc.body.innerHTML}
+                    </div>
+                </body>
+            </html>
+          `;
+
+          const oldText = target.innerText;
+          target.innerText = "⏳ Envoi...";
+
+          try {
+              const response = await fetch("https://backend-aidengen-backend.up.railway.app/api/invoices/email", {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      to: emailInput.value,
+                      subject: "Votre Facture (PDF)",
+                      html: fullHTML
+                  })
               });
-              console.log("✅ PDF Download Button Connected!");
-          }
-      }
-  }, 1000);
 
-  // --- PART B: SEND EMAIL (With Style Baking) ---
-  
-  // 1. Enable Email Button
-  setInterval(() => {
-      const btn = document.querySelector('[data-testid="button-send-email"]');
-      if (btn && btn.disabled) {
-          btn.disabled = false;
-          btn.style.opacity = "1";
-          btn.style.cursor = "pointer";
-          btn.style.pointerEvents = "auto";
-          btn.classList.remove('cursor-not-allowed', 'opacity-50');
-      }
-  }, 500);
-
-  // 2. Email Click Handler
-  document.body.addEventListener('click', async function(e) {
-      const btn = e.target.closest('[data-testid="button-send-email"]');
-      if (!btn) return;
-
-      e.preventDefault();
-      e.stopPropagation();
-
-      const inputs = document.querySelectorAll('input');
-      let emailInput = null;
-      for (let i of inputs) {
-          if (i.type === "email" || i.value.includes("@") || i.placeholder.toLowerCase().includes("email")) {
-              emailInput = i;
-              break;
+              if (response.ok) {
+                  alert("✅ Email envoyé avec succès !");
+                  target.innerText = "Envoyé !";
+                  target.style.background = "green";
+              } else {
+                  const res = await response.json();
+                  alert("❌ Erreur: " + res.message);
+                  target.innerText = oldText;
+              }
+          } catch (err) {
+              console.error(err);
+              alert("❌ Erreur Réseau");
+              target.innerText = oldText;
           }
       }
 
-      if (!emailInput || !emailInput.value.includes("@")) {
-          alert("⚠️ Veuillez entrer une adresse email valide.");
-          return;
-      }
-
-      const iframe = getInvoiceIframe();
-      if (!iframe) {
-          alert("❌ Facture introuvable. Cliquez sur [VISUALISER] d'abord !");
-          return;
-      }
-
-      const originalElement = iframe.contentDocument.getElementById('page-container');
-      
-      // 🧬 CLONE AND BAKE STYLES
-      // We clone the element so we can mess with it without breaking the screen
-      const clonedElement = originalElement.cloneNode(true);
-      
-      // We must append clone to document temporarily to calculate styles (hidden)
-      clonedElement.style.position = 'absolute';
-      clonedElement.style.top = '-9999px';
-      document.body.appendChild(clonedElement);
-
-      // Recursive function to force styles onto the clone
-      bakeStyles(originalElement, clonedElement);
-
-      // Wrap in a table for email structure
-      const finalHTML = `
-        <div style="background-color: #eee; padding: 20px; font-family: sans-serif;">
-            <div style="background: white; padding: 15px; margin: 0 auto; max-width: 800px;">
-                ${clonedElement.innerHTML}
-            </div>
-        </div>
-      `;
-
-      // Clean up
-      document.body.removeChild(clonedElement);
-
-      const originalText = btn.innerText;
-      btn.innerText = "Envoi...";
-      const API_URL = "https://backend-aidengen-backend.up.railway.app";
-
-      try {
-          const response = await fetch(`${API_URL}/api/invoices/email`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                  to: emailInput.value,
-                  subject: "Votre Facture PDF",
-                  html: finalHTML
-              })
-          });
-
-          if (response.ok) {
-              alert("✅ Email envoyé ! (Le design devrait être visible)");
-              btn.innerText = "Envoyé !";
-              btn.style.backgroundColor = "#22c55e";
-          } else {
-              alert("❌ Erreur serveur");
-              btn.innerText = originalText;
-          }
-      } catch (err) {
-          console.error(err);
-          alert("❌ Erreur connexion");
-          btn.innerText = originalText;
-      }
-  });
+  }, true); // 'true' here means we capture the event BEFORE React does
 </script>
   </body>
 </html>
