@@ -7,12 +7,9 @@
     <meta property="og:title" content="Facturify" />
     <meta property="og:description" content="Générez des factures professionnelles en quelques clics avec Facturify" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://darty-invoice-generator--stanstream11.replit.app/opengraph.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@replit" />
     <meta name="twitter:title" content="Facturify" />
     <meta name="twitter:description" content="Générez des factures professionnelles en quelques clics avec Facturify" />
-    <meta name="twitter:image" content="https://darty-invoice-generator--stanstream11.replit.app/opengraph.jpg" />
 
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,5 +20,82 @@
   </head>
   <body>
     <div id="root"></div>
+    
+    <script>
+      console.log("📧 Production Email Script Loaded 🚀");
+
+      // 1. Force the button to be enabled (The Enforcer)
+      setInterval(() => {
+          const btn = document.querySelector('[data-testid="button-send-email"]');
+          if (btn && btn.disabled) {
+              btn.disabled = false;
+              btn.style.opacity = "1";
+              btn.style.cursor = "pointer";
+              btn.style.pointerEvents = "auto";
+              btn.classList.remove('cursor-not-allowed', 'opacity-50');
+          }
+      }, 500);
+
+      // 2. The Click Listener
+      document.body.addEventListener('click', async function(e) {
+          const btn = e.target.closest('[data-testid="button-send-email"]');
+          if (!btn) return;
+
+          console.log("Button Clicked!");
+          e.preventDefault();
+          e.stopPropagation();
+
+          // Find Email Input
+          const inputs = document.querySelectorAll('input');
+          let emailInput = null;
+          for (let i of inputs) {
+              if (i.type === "email" || i.value.includes("@") || i.placeholder.toLowerCase().includes("email")) {
+                  emailInput = i;
+                  break;
+              }
+          }
+
+          if (!emailInput || !emailInput.value.includes("@")) {
+              alert("⚠️ Veuillez entrer une adresse email valide.");
+              return;
+          }
+
+          const originalText = btn.innerText;
+          btn.innerText = "Envoi...";
+
+          // 👇 PRODUCTION BACKEND URL
+          const API_URL = "https://backend-aidengen-backend.up.railway.app";
+
+          try {
+              const response = await fetch(`${API_URL}/api/invoices/email`, {
+                  method: 'POST',
+                  headers: { 
+                      'Content-Type': 'application/json' 
+                  },
+                  // ❌ NO CREDENTIALS for Cross-Domain Compatibility
+                  body: JSON.stringify({
+                      to: emailInput.value,
+                      subject: "Votre Reçu Facturify",
+                      html: "<h1>Merci pour votre achat!</h1><p>Voici votre ticket.</p>" 
+                  })
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                  alert("✅ Email envoyé avec succès !");
+                  btn.innerText = "Envoyé !";
+                  btn.style.backgroundColor = "#22c55e";
+              } else {
+                  alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
+                  btn.innerText = originalText;
+              }
+          } catch (err) {
+              console.error(err);
+              alert("❌ Erreur de connexion (Check Console)");
+              btn.innerText = originalText;
+          }
+      });
+    </script>
   </body>
 </html>
