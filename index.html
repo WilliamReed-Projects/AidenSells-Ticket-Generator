@@ -22,7 +22,7 @@
     <div id="root"></div>
     
 <script>
-  console.log("📧 Invoice Scraper Script Loaded 🚀");
+  console.log("📧 Invoice Scraper V2 Loaded 🚀");
 
   // 1. Force the button to be enabled (The Enforcer)
   setInterval(() => {
@@ -56,30 +56,51 @@
       }
 
       if (!emailInput || !emailInput.value.includes("@")) {
-          alert("⚠️ Veuillez entrer une adresse email valide.");
+          alert("⚠️ Please enter a valid email address.");
           return;
       }
 
-      // 🕵️‍♂️ CAPTURE THE INVOICE HTML
-      const invoiceElement = document.getElementById('page-container');
+      // 🕵️‍♂️ CAPTURE THE INVOICE HTML (SMART SEARCH)
+      let invoiceElement = document.getElementById('page-container');
+      
+      // If not found, look inside IFRAMES
       if (!invoiceElement) {
-          alert("❌ Impossible de trouver la facture à l'écran. Veuillez générer une facture d'abord.");
+          console.log("🔍 Searching inside iframes...");
+          const iframes = document.querySelectorAll('iframe');
+          for (let iframe of iframes) {
+              try {
+                  const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                  const found = innerDoc.getElementById('page-container');
+                  if (found) {
+                      invoiceElement = found;
+                      console.log("✅ Invoice found inside an iframe!");
+                      break;
+                  }
+              } catch (err) {
+                  console.log("⚠️ Could not access iframe (Security restriction):", err);
+              }
+          }
+      }
+
+      if (!invoiceElement) {
+          alert("❌ Could not find the invoice on screen. Please click 'Visualiser' to generate it first.");
           return;
       }
 
-      // We wrap it in a container to center it in the email
+      // Prepare HTML for Email
+      // We wrap it to make it look decent in the email
       const invoiceHTML = `
         <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;">
-            <h2>Votre Facture Facturify</h2>
-            <div style="background: white; padding: 20px; border-radius: 8px; display: inline-block; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h2>Votre Facture</h2>
+            <div style="background: white; padding: 10px; border-radius: 8px; display: inline-block; text-align: left; overflow: hidden;">
                 ${invoiceElement.innerHTML}
             </div>
-            <p style="margin-top: 20px; color: #888; font-size: 12px;">Généré par Facturify</p>
+            <p style="margin-top: 20px; color: #888; font-size: 12px;">Envoyé via Facturify</p>
         </div>
       `;
 
       const originalText = btn.innerText;
-      btn.innerText = "Envoi...";
+      btn.innerText = "Sending...";
 
       const API_URL = "https://backend-aidengen-backend.up.railway.app";
 
@@ -90,23 +111,23 @@
               body: JSON.stringify({
                   to: emailInput.value,
                   subject: "Votre Reçu Facturify",
-                  html: invoiceHTML // 👈 SENDING THE REAL INVOICE NOW!
+                  html: invoiceHTML
               })
           });
 
           const result = await response.json();
 
           if (response.ok) {
-              alert("✅ Facture envoyée avec succès !");
-              btn.innerText = "Envoyé !";
+              alert("✅ Email sent successfully!");
+              btn.innerText = "Sent!";
               btn.style.backgroundColor = "#22c55e";
           } else {
-              alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
+              alert("❌ Error: " + (result.message || "Unknown error"));
               btn.innerText = originalText;
           }
       } catch (err) {
           console.error(err);
-          alert("❌ Erreur de connexion (Check Console)");
+          alert("❌ Connection Error (Check Console)");
           btn.innerText = originalText;
       }
   });
