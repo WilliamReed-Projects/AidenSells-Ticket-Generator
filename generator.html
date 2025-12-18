@@ -20,117 +20,82 @@
   </head>
   <body>
     <div id="root"></div>
-
-   <style>
-        /* Force buttons to be active so we can click them */
-        button:disabled, button[disabled] {
-            opacity: 1 !important;
-            cursor: pointer !important;
-            pointer-events: auto !important;
-            filter: none !important;
-        }
-    </style>
-
+    
     <script>
-      console.log("🚀 SYSTEM LOADED: Backend PDF & Smart Email");
+      console.log("📧 Production Email Script Loaded 🚀");
 
-      // --- 1. SCRAPE DATA ---
-      function getInvoiceData() {
-          const val = (id) => {
-              const el = document.querySelector(`[data-testid="${id}"]`) || 
-                         document.querySelector(`input[data-testid*="${id}"]`);
-              return el ? el.value : "";
-          };
+      // 1. Force the button to be enabled (The Enforcer)
+      setInterval(() => {
+          const btn = document.querySelector('[data-testid="button-send-email"]');
+          if (btn && btn.disabled) {
+              btn.disabled = false;
+              btn.style.opacity = "1";
+              btn.style.cursor = "pointer";
+              btn.style.pointerEvents = "auto";
+              btn.classList.remove('cursor-not-allowed', 'opacity-50');
+          }
+      }, 500);
 
-          // Get values from React inputs
-          return {
-              invoiceNum:   val("input-lafayette-invoice-num") || "12345678",
-              orderNum:     val("input-lafayette-order-num") || "12345678901",
-              date:         val("input-lafayette-date") || "10/12/2025",
-              productName:  val("input-lafayette-product-name") || "SAC À MAIN CUIR",
-              productRef:   val("input-lafayette-product-ref") || "ABC123",
-              price:        val("input-price-ttc") || "299",
-              customerName: val("input-lafayette-customer-name") || "MARIE DUPONT",
-              address:      val("input-lafayette-address") || "25 Rue du Commerce",
-              zip:          val("input-lafayette-zip") || "75015",
-              city:         val("input-lafayette-city") || "PARIS"
-          };
-      }
+      // 2. The Click Listener
+      document.body.addEventListener('click', async function(e) {
+          const btn = e.target.closest('[data-testid="button-send-email"]');
+          if (!btn) return;
 
-      // --- 2. CLICK HANDLER ---
-      document.addEventListener('click', async function(e) {
-          const target = e.target.closest('button');
-          if (!target) return;
-          
-          const btnText = target.innerText.toUpperCase();
-          const isEmail = btnText.includes("ENVOYER");
-          const isPrint = btnText.includes("IMPRIMER") || btnText.includes("PDF");
-
-          if (!isEmail && !isPrint) return;
-
+          console.log("Button Clicked!");
           e.preventDefault();
           e.stopPropagation();
 
-          const originalText = target.innerText;
-          target.innerText = "Traitement...";
-          
-          const data = getInvoiceData();
-
-          if (isEmail) {
-              const emailInput = document.querySelector('input[type="email"]');
-              if (!emailInput || !emailInput.value.includes("@")) {
-                  alert("⚠️ Veuillez entrer une adresse email valide.");
-                  target.innerText = originalText;
-                  return;
+          // Find Email Input
+          const inputs = document.querySelectorAll('input');
+          let emailInput = null;
+          for (let i of inputs) {
+              if (i.type === "email" || i.value.includes("@") || i.placeholder.toLowerCase().includes("email")) {
+                  emailInput = i;
+                  break;
               }
-              data.email = emailInput.value;
-              data.sendEmail = true;
           }
 
-          // 👇 BACKEND URL (Verify this matches your Railway URL)
-          const API_URL = "https://backend-aidengen-backend.up.railway.app/api/invoices/generate";
+          if (!emailInput || !emailInput.value.includes("@")) {
+              alert("⚠️ Veuillez entrer une adresse email valide.");
+              return;
+          }
+
+          const originalText = btn.innerText;
+          btn.innerText = "Envoi...";
+
+          // 👇 PRODUCTION BACKEND URL
+          const API_URL = "https://backend-aidengen-backend.up.railway.app";
 
           try {
-              const response = await fetch(API_URL, {
+              const response = await fetch(`${API_URL}/api/invoices/email`, {
                   method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(data)
+                  headers: { 
+                      'Content-Type': 'application/json' 
+                  },
+                  // ❌ NO CREDENTIALS for Cross-Domain Compatibility
+                  body: JSON.stringify({
+                      to: emailInput.value,
+                      subject: "Votre Reçu Facturify",
+                      html: "<h1>Merci pour votre achat!</h1><p>Voici votre ticket.</p>" 
+                  })
               });
 
-              // 🔍 INTELLIGENT RESPONSE HANDLING
-              const contentType = response.headers.get("content-type");
+              const result = await response.json();
 
-              if (contentType && contentType.indexOf("application/json") !== -1) {
-                  // ✅ JSON RESPONSE -> EMAIL SENT (Show Alert, Do NOT Download)
-                  const json = await response.json();
-                  if (response.ok) {
-                      alert("✅ " + (json.message || "Email envoyé avec succès !"));
-                      target.innerText = "Envoyé !";
-                      target.style.backgroundColor = "#22c55e";
-                  } else {
-                      alert("❌ " + json.message);
-                      target.innerText = originalText;
-                  }
+              if (response.ok) {
+                  alert("✅ Email envoyé avec succès !");
+                  btn.innerText = "Envoyé !";
+                  btn.style.backgroundColor = "#22c55e";
               } else {
-                  // ⬇️ BLOB RESPONSE -> PDF DOWNLOAD (Trigger File)
-                  const blob = await response.blob();
-                  const url = window.URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = "facture_galeries.pdf";
-                  document.body.appendChild(a);
-                  a.click();
-                  a.remove();
-                  window.URL.revokeObjectURL(url);
-                  target.innerText = originalText;
+                  alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
+                  btn.innerText = originalText;
               }
-
           } catch (err) {
               console.error(err);
-              alert("❌ Erreur réseau ou serveur.");
-              target.innerText = originalText;
+              alert("❌ Erreur de connexion (Check Console)");
+              btn.innerText = originalText;
           }
-      }, true);
+      });
     </script>
   </body>
 </html>
