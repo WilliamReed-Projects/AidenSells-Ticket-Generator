@@ -26086,9 +26086,9 @@ function J_({ user: e, setUser: n }) {
       letter-spacing: 6px;
     }
     </style>
-    <div class="watermark-text watermark-1">FACTURIFY</div>
-    <div class="watermark-text watermark-2">FACTURIFY</div>
-    <div class="watermark-text watermark-3">FACTURIFY</div>
+    <div class="watermark-text watermark-1">AidenSells</div>
+    <div class="watermark-text watermark-2">AidenSells</div>
+    <div class="watermark-text watermark-3">AidenSells</div>
     ` + "</body>"
         ),
         Ei = r.current.contentDocument;
@@ -26213,7 +26213,7 @@ function J_({ user: e, setUser: n }) {
           position: relative;
         }
         .watermark-container::before {
-          content: 'FACTURIFY';
+          content: 'AidenSells';
           position: absolute;
           top: 50%;
           left: 50%;
@@ -26259,7 +26259,7 @@ function J_({ user: e, setUser: n }) {
                               fontFamily: "Courier New, monospace",
                               letterSpacing: "0.1em",
                             },
-                            children: "[Facturify]",
+                            children: "[AidenSells]",
                           }),
                           f.jsxs("div", {
                             className: "flex items-center gap-1.5",
@@ -35711,6 +35711,16 @@ function oz({ user: e, setUser: n }) {
           animation: shimmer 2s ease-in-out infinite;
           box-shadow: 0 0 20px rgba(255,255,255,0.4), 0 0 40px rgba(200,200,255,0.2);
         }
+         /* Login Button Customization */ 
+        .custom-login-btn {
+          background-color: rgba(251, 244, 107, 0.1);
+          color: #fbf46b;
+          border-color: #fbf46b;
+        } 
+        .custom-login-btn:hover {
+          background-color: rgba(251, 244, 107, 0.3) !important;
+          box-shadow: 0 10px 15px -3px rgba(251, 244, 107, 0.3), 0 4px 6px -4px rgba(251, 244, 107, 0.3) !important;
+        }
       1
       `,
       }),
@@ -35732,7 +35742,7 @@ function oz({ user: e, setUser: n }) {
                   children: f.jsx("img", {
                     className:
                       "text-xl font-bold h-10 object-contain  tracking-tight silver-shine",
-                    // children: "Facturify.xyz",
+                    // children: "AidenSells.xyz",
                     src: "/assets/Logo.jpg",
                     alt: "AidenSells Logo",
                   }),
@@ -35759,7 +35769,7 @@ function oz({ user: e, setUser: n }) {
                       href: "/login",
                       children: f.jsx(Ie, {
                         className:
-                          "px-3 md:px-6 py-2 md:py-2.5 rounded-full bg-green-600/20 border-2 border-green-500 text-green-300 font-semibold hover:bg-green-600/30 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 text-xs md:text-sm",
+                          "custom-login-btn px-3 md:px-6 py-2 md:py-2.5 rounded-full  border-2 font-semibold transition-all duration-300 text-xs md:text-sm",
                         "data-testid": "button-login-header",
                         children: "Connexion",
                       }),
@@ -35822,7 +35832,7 @@ function oz({ user: e, setUser: n }) {
                 transition: { duration: 0.6, delay: 0.1 },
                 className:
                   "text-[1.6rem] sm:text-4xl md:text-6xl lg:text-7xl font-['Inter_Tight'] font-semibold tracking-tight leading-[1.1] mb-3 sm:mb-4 max-w-4xl silver-shine whitespace-nowrap",
-                children: "Facturify simplifie tout.",
+                children: "AidenSells simplifie tout.",
               }),
               f.jsxs(In.p, {
                 initial: { opacity: 0, y: 20 },
@@ -36492,7 +36502,7 @@ function oz({ user: e, setUser: n }) {
             "container mx-auto px-4 md:px-6 flex items-center justify-center",
           children: f.jsx("span", {
             className: "text-gray-500 text-sm font-medium",
-            children: "© 2025 Facturify. All rights reserved.",
+            children: "© 2025 AidenSells. All rights reserved.",
           }),
         }),
       }),
@@ -36777,7 +36787,7 @@ function pz({ setUser: e }) {
               f.jsx("h1", {
                 className:
                   "text-2xl md:text-3xl font-bold text-center mb-2 silver-shine font-['Inter_Tight']",
-                children: "FACTURIFY",
+                children: "AidenSells",
               }),
               f.jsx("p", {
                 className: "text-center text-gray-300 mb-8 text-xs md:text-sm",
@@ -37248,7 +37258,7 @@ function vz() {
           className: "min-h-screen bg-black flex items-center justify-center",
           children: f.jsx("div", {
             className: "text-blue-400 text-lg",
-            children: "FACTURIFY",
+            children: "AidenSells",
           }),
         })
       : f.jsx(fA, {

@@ -2,99 +2,115 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
 
-    <meta property="og:title" content="Facturify" />
-    <meta property="og:description" content="Générez des factures professionnelles en quelques clics avec Facturify" />
+    <meta property="og:title" content="AidenSells" />
+    <meta
+      property="og:description"
+      content="Générez des factures professionnelles en quelques clics avec AidenSells"
+    />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Facturify" />
-    <meta name="twitter:description" content="Générez des factures professionnelles en quelques clics avec Facturify" />
+    <meta name="twitter:title" content="AidenSells" />
+    <meta
+      name="twitter:description"
+      content="Générez des factures professionnelles en quelques clics avec AidenSells"
+    />
 
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
     <script type="module" crossorigin src="/assets/index-BL-g40cL.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CWJV4sxS.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-CWJV4sxS.css" />
   </head>
   <body>
     <div id="root"></div>
-    
+
     <script>
       console.log("📧 Production Email Script Loaded 🚀");
 
       // 1. Force the button to be enabled (The Enforcer)
       setInterval(() => {
-          const btn = document.querySelector('[data-testid="button-send-email"]');
-          if (btn && btn.disabled) {
-              btn.disabled = false;
-              btn.style.opacity = "1";
-              btn.style.cursor = "pointer";
-              btn.style.pointerEvents = "auto";
-              btn.classList.remove('cursor-not-allowed', 'opacity-50');
-          }
+        const btn = document.querySelector('[data-testid="button-send-email"]');
+        if (btn && btn.disabled) {
+          btn.disabled = false;
+          btn.style.opacity = "1";
+          btn.style.cursor = "pointer";
+          btn.style.pointerEvents = "auto";
+          btn.classList.remove("cursor-not-allowed", "opacity-50");
+        }
       }, 500);
 
       // 2. The Click Listener
-      document.body.addEventListener('click', async function(e) {
-          const btn = e.target.closest('[data-testid="button-send-email"]');
-          if (!btn) return;
+      document.body.addEventListener("click", async function (e) {
+        const btn = e.target.closest('[data-testid="button-send-email"]');
+        if (!btn) return;
 
-          console.log("Button Clicked!");
-          e.preventDefault();
-          e.stopPropagation();
+        console.log("Button Clicked!");
+        e.preventDefault();
+        e.stopPropagation();
 
-          // Find Email Input
-          const inputs = document.querySelectorAll('input');
-          let emailInput = null;
-          for (let i of inputs) {
-              if (i.type === "email" || i.value.includes("@") || i.placeholder.toLowerCase().includes("email")) {
-                  emailInput = i;
-                  break;
-              }
+        // Find Email Input
+        const inputs = document.querySelectorAll("input");
+        let emailInput = null;
+        for (let i of inputs) {
+          if (
+            i.type === "email" ||
+            i.value.includes("@") ||
+            i.placeholder.toLowerCase().includes("email")
+          ) {
+            emailInput = i;
+            break;
           }
+        }
 
-          if (!emailInput || !emailInput.value.includes("@")) {
-              alert("⚠️ Veuillez entrer une adresse email valide.");
-              return;
+        if (!emailInput || !emailInput.value.includes("@")) {
+          alert("⚠️ Veuillez entrer une adresse email valide.");
+          return;
+        }
+
+        const originalText = btn.innerText;
+        btn.innerText = "Envoi...";
+
+        // 👇 PRODUCTION BACKEND URL
+        const API_URL = "https://backend-aidengen-backend.up.railway.app";
+
+        try {
+          const response = await fetch(`${API_URL}/api/invoices/email`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // ❌ NO CREDENTIALS for Cross-Domain Compatibility
+            body: JSON.stringify({
+              to: emailInput.value,
+              subject: "Votre Reçu AidenSells",
+              html: "<h1>Merci pour votre achat!</h1><p>Voici votre ticket.</p>",
+            }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert("✅ Email envoyé avec succès !");
+            btn.innerText = "Envoyé !";
+            btn.style.backgroundColor = "#22c55e";
+          } else {
+            alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
+            btn.innerText = originalText;
           }
-
-          const originalText = btn.innerText;
-          btn.innerText = "Envoi...";
-
-          // 👇 PRODUCTION BACKEND URL
-          const API_URL = "https://backend-aidengen-backend.up.railway.app";
-
-          try {
-              const response = await fetch(`${API_URL}/api/invoices/email`, {
-                  method: 'POST',
-                  headers: { 
-                      'Content-Type': 'application/json' 
-                  },
-                  // ❌ NO CREDENTIALS for Cross-Domain Compatibility
-                  body: JSON.stringify({
-                      to: emailInput.value,
-                      subject: "Votre Reçu Facturify",
-                      html: "<h1>Merci pour votre achat!</h1><p>Voici votre ticket.</p>" 
-                  })
-              });
-
-              const result = await response.json();
-
-              if (response.ok) {
-                  alert("✅ Email envoyé avec succès !");
-                  btn.innerText = "Envoyé !";
-                  btn.style.backgroundColor = "#22c55e";
-              } else {
-                  alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
-                  btn.innerText = originalText;
-              }
-          } catch (err) {
-              console.error(err);
-              alert("❌ Erreur de connexion (Check Console)");
-              btn.innerText = originalText;
-          }
+        } catch (err) {
+          console.error(err);
+          alert("❌ Erreur de connexion (Check Console)");
+          btn.innerText = originalText;
+        }
       });
     </script>
   </body>
