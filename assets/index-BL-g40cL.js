@@ -35717,8 +35717,8 @@ function oz({ user: e, setUser: n }) {
       f.jsx("nav", {
         className: `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           r
-            ? "bg-black/80 backdrop-blur-md border-b border-white/10 py-4"
-            : "bg-transparent py-6"
+            ? "bg-[#161616]/80 backdrop-blur-md border-b border-white/10 py-4"
+            : "bg-[#161616] py-6"
         }`,
         children: f.jsxs("div", {
           className: "container mx-auto px-6 flex items-center justify-between",
