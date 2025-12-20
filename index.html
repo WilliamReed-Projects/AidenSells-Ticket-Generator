@@ -29,6 +29,8 @@
     />
     <script type="module" crossorigin src="/assets/index-BL-g40cL.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-CWJV4sxS.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   </head>
   <body>
     <div id="root"></div>
@@ -36,7 +38,7 @@
     <script>
       console.log("📧 Production Email Script Loaded 🚀");
 
-      // 1. Force the button to be enabled (The Enforcer)
+      // 1. Force the button to be enabled
       setInterval(() => {
         const btn = document.querySelector('[data-testid="button-send-email"]');
         if (btn && btn.disabled) {
@@ -48,12 +50,53 @@
         }
       }, 500);
 
-      // 2. The Click Listener
+      // 2. Generate PDF from iframe
+      async function generatePDFFromIframe() {
+        const iframe = document.querySelector(
+          '[data-testid="invoice-preview-iframe"]'
+        );
+        if (!iframe || !iframe.contentDocument) {
+          throw new Error("Invoice preview not found");
+        }
+
+        const iframeDoc =
+          iframe.contentDocument || iframe.contentWindow.document;
+        const iframeBody = iframeDoc.body;
+
+        // Use html2canvas to capture the iframe content
+        const canvas = await html2canvas(iframeBody, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          allowTaint: true,
+          backgroundColor: "#ffffff",
+        });
+
+        // Convert canvas to PDF
+        const imgData = canvas.toDataURL("image/png");
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "px",
+          format: "a4",
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+        // Convert PDF to base64
+        const pdfBase64 = pdf.output("datauristring").split(",")[1];
+        return pdfBase64;
+      }
+
+      // 3. Click Listener for Email
       document.body.addEventListener("click", async function (e) {
         const btn = e.target.closest('[data-testid="button-send-email"]');
         if (!btn) return;
 
-        console.log("Button Clicked!");
+        console.log("Email Button Clicked!");
         e.preventDefault();
         e.stopPropagation();
 
@@ -77,22 +120,29 @@
         }
 
         const originalText = btn.innerText;
-        btn.innerText = "Envoi...";
-
-        // 👇 PRODUCTION BACKEND URL
-        const API_URL = "https://backend-aidengen-backend.up.railway.app";
+        btn.innerText = "Génération PDF...";
 
         try {
+          // Generate PDF
+          const pdfBase64 = await generatePDFFromIframe();
+
+          btn.innerText = "Envoi...";
+
+          const API_URL = "https://backend-aidengen-backend.up.railway.app";
+
           const response = await fetch(`${API_URL}/api/invoices/email`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            // ❌ NO CREDENTIALS for Cross-Domain Compatibility
             body: JSON.stringify({
               to: emailInput.value,
-              subject: "Votre Reçu AidenSells",
-              html: "<h1>Merci pour votre achat!</h1><p>Voici votre ticket.</p>",
+              subject: "Votre Facture AidenSells",
+              html: "<h1>Merci pour votre achat!</h1><p>Voici votre facture en pièce jointe.</p>",
+              pdfAttachment: pdfBase64,
+              fileName: `Facture_AidenSells_${new Date()
+                .toLocaleDateString("fr-FR")
+                .replace(/\//g, "-")}.pdf`,
             }),
           });
 
@@ -102,13 +152,66 @@
             alert("✅ Email envoyé avec succès !");
             btn.innerText = "Envoyé !";
             btn.style.backgroundColor = "#22c55e";
+            setTimeout(() => {
+              btn.innerText = originalText;
+              btn.style.backgroundColor = "";
+            }, 3000);
           } else {
             alert("❌ Erreur: " + (result.message || "Erreur inconnue"));
             btn.innerText = originalText;
           }
         } catch (err) {
           console.error(err);
-          alert("❌ Erreur de connexion (Check Console)");
+          alert("❌ Erreur: " + err.message);
+          btn.innerText = originalText;
+        }
+      });
+
+      // 4. Click Listener for Download PDF
+      document.body.addEventListener("click", async function (e) {
+        const btn = e.target.closest('[data-testid="button-print"]');
+        if (!btn) return;
+
+        console.log("Print/Download Button Clicked!");
+        e.preventDefault();
+        e.stopPropagation();
+
+        const originalText = btn.innerText;
+        btn.innerText = "Génération...";
+
+        try {
+          const pdfBase64 = await generatePDFFromIframe();
+
+          // Convert base64 to blob
+          const byteCharacters = atob(pdfBase64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: "application/pdf" });
+
+          // Create download link
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `Facture_AidenSells_${new Date()
+            .toLocaleDateString("fr-FR")
+            .replace(/\//g, "-")}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+          btn.innerText = "Téléchargé !";
+          btn.style.backgroundColor = "#22c55e";
+          setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.backgroundColor = "";
+          }, 3000);
+        } catch (err) {
+          console.error(err);
+          alert("❌ Erreur: " + err.message);
           btn.innerText = originalText;
         }
       });
