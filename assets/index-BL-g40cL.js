@@ -26326,22 +26326,27 @@ function J_({ user: e, setUser: n }) {
                               }),
                               f.jsx(ls, {
                                 children: Object.keys(is).map((y) => {
-                                  const ee = [
-                                    "HERMES_TICKET",
-                                    "LOUIS_VUITTON",
-                                    "DIOR",
-                                    "GUCCI",
-                                    "JD_SPORT",
-                                    "FOOT_LOCKER",
-                                    "NIKE",
-                                    "ADIDAS",
-                                    "ZALANDO",
-                                    "FNAC",
-                                    "CDISCOUNT",
-                                    "BOULANGER",
-                                    "APPLE",
-                                    "LOUIS_PION",
-                                  ].includes(y);
+                                  const ee =
+                                    !e &&
+                                    [
+                                      "HERMES_TICKET",
+                                      "LOUIS_VUITTON",
+                                      "DIOR",
+                                      "GUCCI",
+                                      "JD_SPORT",
+                                      "FOOT_LOCKER",
+                                      "NIKE",
+                                      "ADIDAS",
+                                      "ZALANDO",
+                                      "FNAC",
+                                      "CDISCOUNT",
+                                      "BOULANGER",
+                                      "APPLE",
+                                      "LOUIS_PION",
+                                    ].includes(y);
+                                  const brandName = e
+                                    ? is[y].name.replace(" 🔒", "")
+                                    : is[y].name;
                                   return f.jsx(
                                     jt,
                                     {
@@ -26351,7 +26356,7 @@ function J_({ user: e, setUser: n }) {
                                         className: ee
                                           ? "text-gray-400"
                                           : "text-white hover:text-black",
-                                        children: is[y].name,
+                                        children: brandName,
                                       }),
                                     },
                                     y
