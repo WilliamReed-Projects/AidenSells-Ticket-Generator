@@ -35729,9 +35729,12 @@ function oz({ user: e, setUser: n }) {
                 f.jsx(ql, {
                   href: "/",
                   className: "flex items-center gap-1",
-                  children: f.jsx("span", {
-                    className: "text-xl font-bold tracking-tight silver-shine",
-                    children: "Facturify.xyz",
+                  children: f.jsx("img", {
+                    className:
+                      "text-xl font-bold h-10 object-contain  tracking-tight silver-shine",
+                    // children: "Facturify.xyz",
+                    src: "/assets/Logo.jpg",
+                    alt: "AidenSells Logo",
                   }),
                 }),
                 f.jsx("div", {
