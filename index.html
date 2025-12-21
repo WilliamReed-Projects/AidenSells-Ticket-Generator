@@ -139,7 +139,7 @@
               to: emailInput.value,
               subject: "Votre Facture AidenSells",
               html: "<h1>Merci pour votre achat!</h1><p>Voici votre facture en pièce jointe.</p>",
-              pdfAttachment: pdfBase64,
+              pdf_data: pdfBase64,
               fileName: `Facture_AidenSells_${new Date()
                 .toLocaleDateString("fr-FR")
                 .replace(/\//g, "-")}.pdf`,
