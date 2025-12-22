@@ -35728,7 +35728,7 @@ function oz({ user: e, setUser: n }) {
         className: `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           r ? "backdrop-blur-md border-b border-white/10 py-4" : "py-6"
         }`,
-        style: { backgroundColor: "rgb(87, 86, 94, 0.8)"},
+        style: { backgroundColor: "rgb(22, 22, 22, 0.8)"},
         children: f.jsxs("div", {
           className: "container mx-auto px-6 flex items-center justify-between",
           children: [
@@ -35742,7 +35742,7 @@ function oz({ user: e, setUser: n }) {
                     className:
                       "text-xl font-bold h-10 object-contain  tracking-tight silver-shine",
                     // children: "AidenSells.xyz",
-                    src: "/assets/Logo.jpg",
+                    src: "/assets/file.png",
                     alt: "AidenSells Logo",
                   }),
                 }),
