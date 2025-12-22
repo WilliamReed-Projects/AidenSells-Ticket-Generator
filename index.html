@@ -39,16 +39,16 @@
       console.log("📧 Production Email Script Loaded 🚀");
 
       // 1. Force the button to be enabled
-      setInterval(() => {
-        const btn = document.querySelector('[data-testid="button-send-email"]');
-        if (btn && btn.disabled) {
-          btn.disabled = false;
-          btn.style.opacity = "1";
-          btn.style.cursor = "pointer";
-          btn.style.pointerEvents = "auto";
-          btn.classList.remove("cursor-not-allowed", "opacity-50");
-        }
-      }, 500);
+      // setInterval(() => {
+      //   const btn = document.querySelector('[data-testid="button-send-email"]');
+      //   if (btn && btn.disabled) {
+      //     btn.disabled = false;
+      //     btn.style.opacity = "1";
+      //     btn.style.cursor = "pointer";
+      //     btn.style.pointerEvents = "auto";
+      //     btn.classList.remove("cursor-not-allowed", "opacity-50");
+      //   }
+      // }, 500);
 
       // 2. Generate PDF from iframe
       async function generatePDFFromIframe() {

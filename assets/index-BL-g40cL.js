@@ -26052,9 +26052,11 @@ function J_({ user: e, setUser: n }) {
           (y = y.replace(/106(?=<span|$)/g, jr)),
           (y = y.replace(/533(?=<span|$)/g, Ti));
       }
-      const uf = y.replace(
-          "</body>",
-          `
+      const uf = e
+          ? y
+          : y.replace(
+              "</body>",
+              `
     <style>
     .watermark-text {
       position: fixed;
@@ -26090,7 +26092,7 @@ function J_({ user: e, setUser: n }) {
     <div class="watermark-text watermark-2">AidenSells</div>
     <div class="watermark-text watermark-3">AidenSells</div>
     ` + "</body>"
-        ),
+            ),
         Ei = r.current.contentDocument;
       Ei && (Ei.open(), Ei.write(uf), Ei.close());
     }, [
@@ -29036,9 +29038,10 @@ function J_({ user: e, setUser: n }) {
                           }),
                           f.jsxs(Ie, {
                             onClick: Pc,
-                            disabled: !1,
-                            className:
-                              "w-full bg-blue-600 text-white border-2 border-gray-600 font-semibold py-2.5 cursor-pointer opacity-50 uppercase tracking-widest",
+                            disabled: !e,
+                            className: !e
+                              ? "w-full bg-gray-700 text-gray-500 border-2 border-gray-600 font-semibold py-2.5 cursor-not-allowed opacity-50 uppercase tracking-widest"
+                              : "w-full bg-blue-600 text-white border-2 border-gray-600 font-semibold py-2.5 cursor-pointer opacity-50 uppercase tracking-widest",
                             "data-testid": "button-send-email",
                             children: [
                               f.jsx(td, { className: "mr-2 h-4 w-4" }),
