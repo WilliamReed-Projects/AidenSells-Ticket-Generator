@@ -72,19 +72,43 @@
           backgroundColor: "#ffffff",
         });
 
-        // Convert canvas to PDF
+        // Convert canvas to PDF with proper A4 sizing
         const imgData = canvas.toDataURL("image/png");
         const { jsPDF } = window.jspdf;
+
+        // A4 dimensions in mm
         const pdf = new jsPDF({
           orientation: "portrait",
-          unit: "px",
+          unit: "mm",
           format: "a4",
         });
 
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const pdfWidth = pdf.internal.pageSize.getWidth(); // 210mm
+        const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        // Calculate image dimensions to fit A4 while maintaining aspect ratio
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const canvasAspectRatio = canvasWidth / canvasHeight;
+        const pdfAspectRatio = pdfWidth / pdfHeight;
+
+        let imgWidth, imgHeight, xOffset, yOffset;
+
+        if (canvasAspectRatio > pdfAspectRatio) {
+          // Canvas is wider relative to its height than PDF
+          imgWidth = pdfWidth;
+          imgHeight = pdfWidth / canvasAspectRatio;
+          xOffset = 0;
+          yOffset = (pdfHeight - imgHeight) / 2;
+        } else {
+          // Canvas is taller relative to its width than PDF
+          imgHeight = pdfHeight;
+          imgWidth = pdfHeight * canvasAspectRatio;
+          xOffset = (pdfWidth - imgWidth) / 2;
+          yOffset = 0;
+        }
+
+        pdf.addImage(imgData, "PNG", xOffset, yOffset, imgWidth, imgHeight);
 
         // Convert PDF to base64
         const pdfBase64 = pdf.output("datauristring").split(",")[1];
