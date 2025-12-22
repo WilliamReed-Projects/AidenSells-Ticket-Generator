@@ -26265,7 +26265,7 @@ function J_({ user: e, setUser: n }) {
                             className: "flex items-center gap-1.5",
                             children: [
                               f.jsx("a", {
-                                href: "https://t.me/babyspow",
+                                href: "https://discord.gg/aidensells",
                                 target: "_blank",
                                 rel: "noopener noreferrer",
                                 className:
@@ -29128,12 +29128,12 @@ function J_({ user: e, setUser: n }) {
                   children: "Cette marque sera bientôt disponible.",
                 }),
                 f.jsx("a", {
-                  href: "https://t.me/babyspow",
+                  href: "https://discord.gg/aidensells",
                   target: "_blank",
                   rel: "noopener noreferrer",
                   className:
                     "text-white hover:text-[#00FF00] transition-colors underline text-xs",
-                  children: "Contactez @babyspow",
+                  children: "Contactez @zagato.resell",
                 }),
               ],
             }),
@@ -35740,7 +35740,7 @@ function oz({ user: e, setUser: n }) {
                   className: "flex items-center gap-1",
                   children: f.jsx("img", {
                     className:
-                      "text-xl font-bold h-10 object-contain  tracking-tight silver-shine",
+                      "text-xl font-bold h-15 object-contain  tracking-tight ",
                     // children: "AidenSells.xyz",
                     src: "/assets/file.png",
                     alt: "AidenSells Logo",
@@ -35774,22 +35774,17 @@ function oz({ user: e, setUser: n }) {
                       }),
                     }),
                 f.jsx("a", {
-                  href: "https://t.me/babyspow",
+                  href: "https://discord.gg/aidensells",
                   target: "_blank",
                   rel: "noopener noreferrer",
                   className:
                     "hidden md:flex p-2.5 rounded-full bg-white/5 border-2 border-white text-white hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-white/30 items-center justify-center",
                   "data-testid": "button-telegram-header",
-                  title: "Contact sur Telegram",
-                  children: f.jsx("svg", {
-                    className: "w-5 h-5",
-                    viewBox: "0 0 24 24",
-                    fill: "currentColor",
-                    children: f.jsx("path", {
-                      d: "M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.5-1.359 8.627-.168.9-.5 1.201-.822 1.23-.697.064-1.226-.461-1.901-.902-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.305-3.23.007-.032.014-.15-.056-.212-.069-.062-.171-.041-.244-.024-.103.024-1.754 1.11-4.943 3.261-.468.316-.893.47-1.286.46-.423-.009-1.235-.24-1.836-.44-.741-.24-1.325-.367-1.275-.775.027-.2.325-.403.892-.611 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.12.099.152.232.164.335z",
-                    }),
+                  title: "Contact sur discord",
+                  children: f.jsx("path", {
+                    d: "M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.249a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.249.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.369a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.077.077 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.14 13.14 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.095.252-.194.372-.291a.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.097.246.196.373.291a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.04.107c.36.698.772 1.364 1.225 1.993a.076.076 0 0 0 .084.028 19.88 19.88 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.673-3.548-13.661a.061.061 0 0 0-.031-.028z",
+                    })
                   }),
-                }),
                 f.jsx(ql, {
                   href: "/generator",
                   children: f.jsx(Ie, {
@@ -36341,7 +36336,7 @@ function oz({ user: e, setUser: n }) {
                       ),
                     }),
                     f.jsx("a", {
-                      href: "https://t.me/babyspow",
+                      href: "https://discord.gg/aidensells",
                       target: "_blank",
                       rel: "noopener noreferrer",
                       className: "block",
@@ -36353,7 +36348,7 @@ function oz({ user: e, setUser: n }) {
                     }),
                     f.jsx("p", {
                       className: "text-xs text-gray-500 text-center mt-4",
-                      children: "Achetez directement via Telegram @babyspow",
+                      children: "Achetez directement via Telegram @zagato.resell",
                     }),
                   ],
                 }),
@@ -36474,7 +36469,7 @@ function oz({ user: e, setUser: n }) {
                                 "Vous pouvez nous joindre via le bouton telegram en haut de l'écran ou en cliquant",
                                 " ",
                                 f.jsx("a", {
-                                  href: "https://t.me/babyspow",
+                                  href: "https://discord.gg/aidensells",
                                   target: "_blank",
                                   rel: "noopener noreferrer",
                                   className:
@@ -36851,12 +36846,12 @@ function pz({ setUser: e }) {
                     "Pas de compte ? Contactez nous",
                     " ",
                     f.jsx("a", {
-                      href: "https://t.me/babyspow",
+                      href: "https://discord.gg/aidensells",
                       target: "_blank",
                       rel: "noopener noreferrer",
                       "data-testid": "link-telegram-contact",
                       className: "text-white font-semibold hover:underline",
-                      children: "ICI sur Telegram @babyspow",
+                      children: "ICI sur discord @zagato.resell",
                     }),
                     " ",
                     "pour en créer un après paiement.",
