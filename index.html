@@ -166,55 +166,6 @@
           btn.innerText = originalText;
         }
       });
-
-      // 4. Click Listener for Download PDF
-      document.body.addEventListener("click", async function (e) {
-        const btn = e.target.closest('[data-testid="button-print"]');
-        if (!btn) return;
-
-        console.log("Print/Download Button Clicked!");
-        e.preventDefault();
-        e.stopPropagation();
-
-        const originalText = btn.innerText;
-        btn.innerText = "Génération...";
-
-        try {
-          const pdfBase64 = await generatePDFFromIframe();
-
-          // Convert base64 to blob
-          const byteCharacters = atob(pdfBase64);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], { type: "application/pdf" });
-
-          // Create download link
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `Facture_AidenSells_${new Date()
-            .toLocaleDateString("fr-FR")
-            .replace(/\//g, "-")}.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-
-          btn.innerText = "Téléchargé !";
-          btn.style.backgroundColor = "#22c55e";
-          setTimeout(() => {
-            btn.innerText = originalText;
-            btn.style.backgroundColor = "";
-          }, 3000);
-        } catch (err) {
-          console.error(err);
-          alert("❌ Erreur: " + err.message);
-          btn.innerText = originalText;
-        }
-      });
     </script>
   </body>
 </html>
