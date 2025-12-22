@@ -35740,7 +35740,7 @@ function oz({ user: e, setUser: n }) {
                   className: "flex items-center gap-1",
                   children: f.jsx("img", {
                     className:
-                      "text-xl font-bold h-15 object-contain  tracking-tight ",
+                      "text-xl font-bold h-10 object-contain  tracking-tight ",
                     // children: "AidenSells.xyz",
                     src: "/assets/file.png",
                     alt: "AidenSells Logo",
