@@ -29050,9 +29050,11 @@ function J_({ user: e, setUser: n }) {
                           }),
                           f.jsxs(Ie, {
                             onClick: cf,
-                            disabled: !0,
+                            disabled: !e || !d,
                             className:
-                              "w-full bg-gray-700 text-gray-500 border-2 border-gray-600 font-semibold py-2.5 cursor-not-allowed opacity-50 uppercase tracking-widest",
+                              !e || !d
+                                ? "w-full bg-gray-700 text-gray-500 border-2 border-gray-600 font-semibold py-2.5 cursor-not-allowed opacity-50 uppercase tracking-widest"
+                                : "w-full bg-green-600 text-white border-2 border-gray-600 font-semibold py-2.5 cursor-pointer opacity-50 uppercase tracking-widest",
                             "data-testid": "button-print",
                             children: [
                               f.jsx(td, { className: "mr-2 h-4 w-4" }),
