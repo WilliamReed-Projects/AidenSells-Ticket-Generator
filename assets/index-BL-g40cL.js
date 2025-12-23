@@ -26323,7 +26323,7 @@ function J_({ user: e, setUser: n }) {
                             children: [
                               f.jsx(os, {
                                 className:
-                                  "retro-btn bg-black text-white border-2 border-white text-sm hover:bg-white hover:text-black font-mono font-bold",
+                                  "retro-btn bg-black text-white border-2 border-white text-sm hover:bg-white hover:text-black font-mono font-bold  active:text-black",
                                 "data-testid": "select-brand",
                                 children: f.jsx(Js, {}),
                               }),
@@ -35822,7 +35822,7 @@ function oz({ user: e, setUser: n }) {
           }),
           f.jsxs("div", {
             className:
-              "container mx-auto px-6 flex flex-col items-center text-center",
+              "container mx-auto px-6 flex flex-col items-center text-center  mt-3",
             children: [
               f.jsx(In.div, {
                 initial: { opacity: 0, y: 20 },
