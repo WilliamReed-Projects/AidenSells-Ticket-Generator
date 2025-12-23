@@ -26310,7 +26310,7 @@ function J_({ user: e, setUser: n }) {
                     children: [
                       f.jsxs("div", {
                         className:
-                          "bg-[#121212] border-2 border-white p-5 rounded",
+                          "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 ",
                         children: [
                           f.jsx(te, {
                             className:
