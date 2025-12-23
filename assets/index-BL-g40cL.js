@@ -35786,7 +35786,7 @@ function oz({ user: e, setUser: n }) {
                   rel: "noopener noreferrer",
                   className:
                     "hidden md:flex p-2.5 rounded-full bg-white/5 border-2 border-white text-white hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-white/30 items-center justify-center",
-                  "data-testid": "button-telegram-header",
+                  "data-testid": "button-Discord-header",
                   title: "Contact sur discord",
                   children: f.jsx("svg", {
                     xmlns: "http://www.w3.org/2000/svg",
@@ -35830,7 +35830,7 @@ function oz({ user: e, setUser: n }) {
                 className:
                   "inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs md:text-sm text-gray-300 mb-4 md:mb-6",
                 children: f.jsx("span", {
-                  children: "+180 utilisateurs depuis 2025.",
+                  children: "+335 clients satisfait depuis 2024.",
                 }),
               }),
               f.jsx(In.h1, {
@@ -36356,13 +36356,13 @@ function oz({ user: e, setUser: n }) {
                       children: f.jsx(Ie, {
                         className:
                           "w-full px-6 py-3 rounded-2xl bg-white/5 border-2 border-white text-white font-semibold hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-white/30",
-                        children: "Contactez-nous sur Telegram",
+                        children: "Contactez-nous sur Discord",
                       }),
                     }),
                     f.jsx("p", {
                       className: "text-xs text-gray-500 text-center mt-4",
                       children:
-                        "Achetez directement via Telegram @zagato.resell",
+                        "Achetez directement via Discord @zagato.resell",
                     }),
                   ],
                 }),
@@ -36480,7 +36480,7 @@ function oz({ user: e, setUser: n }) {
                         children: N.hasLink
                           ? f.jsxs("span", {
                               children: [
-                                "Vous pouvez nous joindre via le bouton telegram en haut de l'écran ou en cliquant",
+                                "Vous pouvez nous joindre via le bouton Discord en haut de l'écran ou en cliquant",
                                 " ",
                                 f.jsx("a", {
                                   href: "https://discord.gg/aidensells",
@@ -36863,7 +36863,7 @@ function pz({ setUser: e }) {
                       href: "https://discord.gg/aidensells",
                       target: "_blank",
                       rel: "noopener noreferrer",
-                      "data-testid": "link-telegram-contact",
+                      "data-testid": "link-Discord-contact",
                       className: "text-white font-semibold hover:underline",
                       children: "ICI sur discord @zagato.resell",
                     }),
