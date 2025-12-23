@@ -26310,7 +26310,7 @@ function J_({ user: e, setUser: n }) {
                     children: [
                       f.jsxs("div", {
                         className:
-                          "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 ",
+                          "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md ",
                         children: [
                           f.jsx(te, {
                             className:
@@ -26372,7 +26372,7 @@ function J_({ user: e, setUser: n }) {
                       }),
                       (S || C || M || j) &&
                         f.jsxs("div", {
-                          className: "bg-black p-6 border-2 border-white",
+                          className: "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md",
                           children: [
                             f.jsxs("h3", {
                               className:
@@ -26865,7 +26865,7 @@ function J_({ user: e, setUser: n }) {
                         }),
                       (S || C || M || j) &&
                         f.jsxs("div", {
-                          className: "bg-black p-6 border-2 border-white",
+                          className: "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md ",
                           children: [
                             f.jsxs("h3", {
                               className:
@@ -27242,7 +27242,7 @@ function J_({ user: e, setUser: n }) {
                       !D &&
                         !P &&
                         f.jsxs("div", {
-                          className: "bg-black p-6 border-2 border-white",
+                          className: "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md ",
                           children: [
                             f.jsxs("h3", {
                               className:
@@ -27993,7 +27993,7 @@ function J_({ user: e, setUser: n }) {
                         }),
                       D &&
                         f.jsxs("div", {
-                          className: "bg-black p-6 border-2 border-white",
+                          className: "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md ",
                           children: [
                             f.jsxs("h3", {
                               className:
@@ -28090,7 +28090,7 @@ function J_({ user: e, setUser: n }) {
                         }),
                       D &&
                         f.jsxs("div", {
-                          className: "bg-black p-6 border-2 border-white",
+                          className: "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md ",
                           children: [
                             f.jsxs("h3", {
                               className:
@@ -28300,7 +28300,7 @@ function J_({ user: e, setUser: n }) {
                         }),
                       D &&
                         f.jsxs("div", {
-                          className: "bg-black p-6 border-2 border-white",
+                          className: "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md ",
                           children: [
                             f.jsxs("h3", {
                               className:
@@ -28444,7 +28444,7 @@ function J_({ user: e, setUser: n }) {
                         }),
                       P &&
                         f.jsxs("div", {
-                          className: "bg-black p-6 border-2 border-white",
+                          className: "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md ",
                           children: [
                             f.jsxs("h3", {
                               className:
@@ -28567,7 +28567,7 @@ function J_({ user: e, setUser: n }) {
                         }),
                       P &&
                         f.jsxs("div", {
-                          className: "bg-black p-6 border-2 border-white",
+                          className: "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md ",
                           children: [
                             f.jsxs("h3", {
                               className:
@@ -28764,7 +28764,7 @@ function J_({ user: e, setUser: n }) {
                         }),
                       P &&
                         f.jsxs("div", {
-                          className: "bg-black p-6 border-2 border-white",
+                          className: "bg-gradient-to-br from-white/10 to-white/5 border-2 border-white p-5 rounded-md ",
                           children: [
                             f.jsxs("h3", {
                               className:
