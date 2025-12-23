@@ -35829,7 +35829,7 @@ function oz({ user: e, setUser: n }) {
                 animate: { opacity: 1, y: 0 },
                 transition: { duration: 0.6 },
                 className:
-                  "inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs md:text-sm text-gray-300 mb-4 md:mb-6 mt-4 md:mt-0",
+                  "inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs md:text-sm text-gray-300 mb-4 md:mb-6 mt-6 md:mt-0",
                 children: f.jsx("span", {
                   children: "+335 clients satisfait depuis 2024.",
                 }),
