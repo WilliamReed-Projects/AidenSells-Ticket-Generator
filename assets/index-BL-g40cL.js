@@ -26309,7 +26309,7 @@ function J_({ user: e, setUser: n }) {
                     className: "space-y-6",
                     children: [
                       f.jsxs("div", {
-                        className: "bg-black border-2 border-white p-5",
+                        className: "bg-[#121212] border-2 border-white p-5 rounded",
                         children: [
                           f.jsx(te, {
                             className:
@@ -35999,7 +35999,7 @@ function oz({ user: e, setUser: n }) {
                   "text-center mb-10 flex flex-col sm:flex-row items-center justify-center gap-3",
                 children: [
                   f.jsx("a", {
-                    href: "https://t.me/m/xUP1FGzjMTM0",
+                    href: "https://discord.gg/aidensells",
                     target: "_blank",
                     rel: "noopener noreferrer",
                     children: f.jsx(Ie, {
