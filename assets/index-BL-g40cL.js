@@ -35814,7 +35814,7 @@ function oz({ user: e, setUser: n }) {
       }),
       f.jsxs("section", {
         id: "home",
-        className: "relative pt-24 pb-12 md:pt-36 md:pb-20 overflow-hidden",
+        className: "relative pt-32 pb-12 md:pt-44 md:pb-20 overflow-hidden",
         children: [
           f.jsx("div", {
             className:
